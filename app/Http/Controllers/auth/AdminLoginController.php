@@ -5,37 +5,50 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Exception;
 
 class AdminLoginController extends Controller
 {
     public function index()
     {
-        return view("auth.admin-login"); // Create a Blade file: resources/views/auth/admin-login.blade.php
+        return view("auth.admin-login"); // Blade file: resources/views/auth/admin-login.blade.php
     }
 
     public function authenticate(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|min:6',
-        ]);
+        try {
+            $credentials = $request->validate([
+                'email' => 'required|email',
+                'password' => 'required|min:6',
+            ]);
 
-        if (Auth::guard('admin')->attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->route('admin.dashboard'); // Redirect to the admin dashboard
+            if (Auth::guard('admin')->attempt($credentials)) {
+                $request->session()->regenerate();
+                return redirect()->route('admin.dashboard'); // Redirect to admin dashboard
+            }
+
+            return back()->withErrors([
+                'email' => 'Invalid credentials',
+            ])->onlyInput('email');
+
+        } catch (Exception $e) {
+            Log::error('AdminLoginController@authenticate Error: ' . $e->getMessage());
+            return back()->with('error', 'An error occurred while logging in. Please try again.');
         }
-
-        return back()->withErrors([
-            'email' => 'Invalid credentials',
-        ])->onlyInput('email');
     }
 
     public function logout(Request $request)
     {
-        Auth::guard('admin')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        
-        return redirect()->route('admin.login');
+        try {
+            Auth::guard('admin')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()->route('admin.login');
+        } catch (Exception $e) {
+            Log::error('AdminLoginController@logout Error: ' . $e->getMessage());
+            return redirect()->route('admin.login')->with('error', 'Failed to log out. Please try again.');
+        }
     }
 }

@@ -25,6 +25,18 @@
                     <input type="number" name="quantity" class="w-full px-3 py-1.5 border rounded focus:ring focus:ring-blue-200" min="0" required>
                 </div>
             </div>
+
+            <!-- Categories Multi-Select -->
+            <div class="mb-3">
+                <label class="block text-sm font-medium">Categories</label>
+                <select name="categories[]" class="w-full px-3 py-1.5 border rounded focus:ring focus:ring-blue-200" multiple>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
+                <small class="text-gray-500">Hold Ctrl (Windows) or Command (Mac) to select multiple categories.</small>
+            </div>
+
             <div class="mb-3">
                 <label class="block text-sm font-medium">Status</label>
                 <select name="status" class="w-full px-3 py-1.5 border rounded focus:ring focus:ring-blue-200">

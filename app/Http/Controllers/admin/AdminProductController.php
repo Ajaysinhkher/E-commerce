@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\product;
+use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Facades\Log;
 
 class AdminProductController extends Controller
 {
@@ -16,8 +17,13 @@ class AdminProductController extends Controller
      */
     public function index()
     {
-        $products = product::all();
-        return view('admin.products',['products'=>$products]); // Pass products as an array attribute
+        try {
+            $products = Product::query()->simplePaginate(4);
+            return view('admin.products', ['products' => $products]);
+        } catch (\Exception $e) {
+            Log::error('AdminProductController@index Error: ' . $e->getMessage());
+            return back()->with('error', 'Failed to load products.');
+        }
     }
 
     /**
@@ -25,7 +31,13 @@ class AdminProductController extends Controller
      */
     public function create()
     {
-        return view('admin.products.create');
+        try {
+            $categories = Category::all();
+            return view('admin.products.create', ['categories' => $categories]);
+        } catch (\Exception $e) {
+            Log::error('AdminProductController@create Error: ' . $e->getMessage());
+            return back()->with('error', 'Failed to load categories.');
+        }
     }
 
     /**
@@ -33,7 +45,65 @@ class AdminProductController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->toArray());
+        try {
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255',
+                'price' => 'required|numeric|min:0',
+                'description' => 'required|string',
+                'quantity' => 'required|integer|min:0',
+                'status' => 'required|in:available,unavailable',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:7000',
+                'categories' => 'required|array',
+                'categories.*' => 'exists:categories,id',
+            ]);
+
+            // Handle Image Upload
+            $imagePath = null;
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('products', 'public');
+                $imagePath = 'products/' . basename($imagePath);
+            }
+
+            // Create Product
+            $product = Product::create([
+                'name' => $request->name,
+                'price' => $request->price,
+                'description' => $request->description,
+                'quantity' => $request->quantity,
+                'status' => $request->status,
+                'slug' => Str::slug($request->name),
+                'image' => $imagePath,
+            ]);
+
+            // Attach categories
+            $product->categories()->attach($request->categories);
+
+            return redirect()->route('admin.products')->with('success', 'Product added successfully.');
+        } catch (\Exception $e) {
+            Log::error('AdminProductController@store Error: ' . $e->getMessage());
+            return back()->with('error', 'Failed to add product.');
+        }
+    }
+
+    /**
+     * Show the form for editing the specified product.
+     */
+    public function edit($id)
+    {
+        try {
+            $product = Product::findOrFail($id);
+            return view('admin.products.edit', ['product' => $product]);
+        } catch (\Exception $e) {
+            Log::error('AdminProductController@edit Error: ' . $e->getMessage());
+            return back()->with('error', 'Failed to load product details.');
+        }
+    }
+
+    /**
+     * Update the specified product in the database.
+     */
+    public function update(Request $request, $id)
+    {
         try {
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
@@ -43,106 +113,39 @@ class AdminProductController extends Controller
                 'status' => 'required|in:available,unavailable',
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:7000',
             ]);
-            
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            dd($e->errors()); // Show validation errors
-        }
 
-        // Handle Image Upload
-        $imagePath = null; // Default image
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
-            $imagePath = 'products/' . basename($imagePath);
-        }
+            $product = Product::findOrFail($id);
 
-
-
-        // Create Product
-        product::create([
-            'name' => $request->name,
-            'price' => $request->price,
-            'description' => $request->description,
-            'quantity' => $request->quantity,
-            'status' => $request->status,
-            'slug' => Str::slug($request->name),
-            'image' => $imagePath,
-        ]);
-
-        return redirect()->route('admin.products')->with('success', 'Product added successfully.');
-    }
-
-    /**
-     * Show the form for editing the specified product.
-     */
-    public function edit( $id)
-    {
-        $product = product::find($id);
-        if(!$product)
-        {
-            abort(404);
-        }
-        // dd($product->toArray());
-       
-        return view('admin.products.edit',['product'=>$product]);
-    }
-
-    /**
-     * Update the specified product in the database.
-     */
-    public function update(Request $request, $id)
-    {
-        // dd($request->all());
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric|min:0',
-            'description' => 'required|string', // Ensure description is required
-            'quantity' => 'required|integer|min:0',
-            'status' => 'required|in:available,unavailable',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:7000',
-        ]);
-
-        // dd($val);
-        // dd($request->validated());
-
-        // fetch product to be edited by id attribute
-        $product = product::findOrFail($id);
-
-        // Handle image upload
-        if ($request->hasFile('image')) {
-
-            // delete the old image if exists:
-                if($product->image)
-                {
-                    \Storage::delete('public/'. $product->image);
+            // Handle image upload
+            if ($request->hasFile('image')) {
+                if ($product->image) {
+                    Storage::delete('public/' . $product->image);
                 }
 
+                $imagePath = $request->file('image')->store('products', 'public');
+                $imagePath = 'products/' . basename($imagePath);
+                $product->image = $imagePath;
+            }
 
-            // store new image:
+            // Update Product
+            $product->update([
+                'name' => $request->name,
+                'price' => $request->price,
+                'description' => $request->description,
+                'quantity' => $request->quantity,
+                'status' => $request->status,
+                'slug' => Str::slug($request->name),
+                'image' => $product->image,
+            ]);
 
-            $imagePath = $request->file('image')->store('products', 'public');
-            $imagePath = 'products/' . basename($imagePath);
+            // Sync categories
+            $product->categories()->sync($request->categories);
 
-            // update image path in products folder
-            $product->image = $imagePath;
+            return redirect()->route('admin.products')->with('success', 'Product updated successfully.');
+        } catch (\Exception $e) {
+            Log::error('AdminProductController@update Error: ' . $e->getMessage());
+            return back()->with('error', 'Failed to update product.');
         }
-
-        // dd($imagePath);
-
-      
-        // dd($product);
-        // Update Product
-        $product->update([
-            'name' => $request->name,
-            'price' => $request->price,
-            'description' => $request->description,
-            'quantity' => $request->quantity,
-            'status' => $request->status,
-            'slug' => Str::slug($request->name),
-            'image'=>$product->image,  //ensure image is updated
-        ]);
-
-        // success is stored in session over here
-        return redirect()->route('admin.products')->with('success', 'Product updated successfully.');
     }
 
     /**
@@ -150,8 +153,13 @@ class AdminProductController extends Controller
      */
     public function destroy($id)
     {
-        $product = product::findOrFail($id);
-        $product->delete();
-        return redirect()->route('admin.products')->with('success', 'Product deleted successfully.');
+        try {
+            $product = Product::findOrFail($id);
+            $product->delete();
+            return redirect()->route('admin.products')->with('success', 'Product deleted successfully.');
+        } catch (\Exception $e) {
+            Log::error('AdminProductController@destroy Error: ' . $e->getMessage());
+            return back()->with('error', 'Failed to delete product.');
+        }
     }
 }

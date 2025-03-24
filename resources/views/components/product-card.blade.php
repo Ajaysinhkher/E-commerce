@@ -15,20 +15,17 @@
 
     <!-- Buttons: View Details & Add to Cart -->
     <div class="mt-4 flex justify-between items-center">
-        <a href="/product-details" 
-           class="text-blue-500 text-sm hover:underline transition">
+        <a href="{{ route('product.details', ['id' => $product['id']]) }}" 
+            class="text-blue-500 text-sm hover:underline transition">
             View Details
-        </a>
+         </a>
+         
 
-        {{-- <form action="{{ route('cart.add', $product['id']) }}" method="POST"> --}}
-
-            <a href="/cart" class="py-2 px-4 text-sm border rounded-md bg-gray-200 text-gray-800 hover:bg-gray-300 transition">Add to cart</a>
-            {{-- <form action="/cart" method="POST"> --}}
-            {{-- @csrf
-            <button type="submit" class="py-2 px-4 text-sm border rounded-md bg-gray-200 text-gray-800 hover:bg-gray-300 transition">
-                Add to Cart
-            </button>
-        </form> --}}
+        {{-- add to cart functionality --}}
+        <button type="button"
+        class="py-2 px-4 text-sm border rounded-md bg-gray-200 text-gray-800 hover:bg-gray-300 transition add-to-cart" data-id="{{ $product['id'] }}">
+        Add to Cart
+        </button>
     </div>
 
     <!-- Wishlist Button (Appears on Hover) -->

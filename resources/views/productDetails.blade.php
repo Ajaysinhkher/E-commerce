@@ -2,6 +2,6 @@
 
     @extends('layouts.app')
     @section('content')
-    <x-product-details-card></x-product-details-card>
+    <x-product-details-card  :product="$product"></x-product-details-card>
 
     @endsection

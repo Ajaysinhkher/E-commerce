@@ -7,26 +7,25 @@ use App\Http\Requests\AuthRequest;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
     public function index() {
         try {
-
             return view("auth.login");
-
         } catch (Exception $e) {
-
+            Log::error('LoginController@index Error: ' . $e->getMessage());
+            return back()->with('error', 'An error occurred while loading the login page.');
         }
     }
 
     public function authenticate(AuthRequest $request) {
         try {
-
             $credentials = $request->only(["email", "password"]);
             
-            // create session 
-            if(Auth::guard("customer")->attempt($credentials)) {
+            // Create session 
+            if (Auth::guard("customer")->attempt($credentials)) {
                 $request->session()->regenerate();
                 return redirect(route("home"));
             }
@@ -36,12 +35,22 @@ class LoginController extends Controller
             ])->onlyInput('email');
 
         } catch (Exception $e) {
-
+            Log::error('LoginController@authenticate Error: ' . $e->getMessage());
+            return back()->with('error', 'An error occurred during authentication. Please try again.');
         }
     }
 
-    public function logout() {
-        Auth::guard("customer")->logout();
-        return redirect(route("customer.login"));
+    public function logout(Request $request) {
+        try {
+            Auth::guard("customer")->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect(route("customer.login"));
+            
+        } catch (Exception $e) {
+            Log::error('LoginController@logout Error: ' . $e->getMessage());
+            return redirect(route("customer.login"))->with('error', 'Failed to log out. Please try again.');
+        }
     }
 }

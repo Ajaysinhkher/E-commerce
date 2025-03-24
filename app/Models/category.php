@@ -1,13 +1,13 @@
 <?php
 
 namespace App\Models;
-use App\Models\product;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
-class category extends Model
+class Category extends Model
 {
     use HasFactory;
 
@@ -15,8 +15,9 @@ class category extends Model
         'name',
         'slug',
     ];
-    // public function products() :HasMany
-    // {
-    //     return $this->hasMany(product::class);
-    // }
+    
+    public function products() :BelongsToMany
+    {
+        return $this->hasMany(Product::class,'product_categories', 'category_id', 'product_id',);
+    }
 }
