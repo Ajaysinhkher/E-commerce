@@ -10,8 +10,9 @@
                 <th class="p-3 border">ID</th>
                 <th class="p-3 border">Name</th>
                 <th class="p-3 border">Email</th>
-                <th class="p-3 border">Staus</th>
+                <th class="p-3 border">Status</th>
                 <th class="p-3 border">Phone</th>
+                <th class="p-3 border text-center">Actions</th> <!-- New column for actions -->
             </tr>
         </thead>
         <tbody>
@@ -20,11 +21,42 @@
                 <td class="p-3 border">{{ $customer->id }}</td>
                 <td class="p-3 border">{{ $customer->user_name }}</td>
                 <td class="p-3 border">{{ $customer->email }}</td>
-                <td class="p-3 border">{{ $customer->status }}</td>
+                <td class="p-3 border">
+                    <span class="px-2 py-1 text-xs font-semibold text-white 
+                        {{ $customer->status == 'active' ? 'bg-green-500' : 'bg-red-500' }} rounded">
+                        {{ ucfirst($customer->status) }}
+                    </span>
+                </td>
                 <td class="p-3 border">{{ $customer->phone }}</td>
+                <td class="p-3 border text-center space-x-2">
+                    <!-- Edit Button -->
+                    <a href="{{ route('admin.customers.edit', $customer->id) }}" 
+                       class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+                        Edit
+                    </a>
+
+                    <!-- Delete Button -->
+                    <form action="{{ route('admin.customers.delete', $customer->id) }}" method="POST" 
+                          class="inline-block" 
+                          onsubmit="return confirmDelete();">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" 
+                                class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                            Delete
+                        </button>
+                    </form>
+                </td>
             </tr>
             @endforeach
         </tbody>
     </table>
 </div>
+
+<script>
+    function confirmDelete() {
+        return confirm("Are you sure you want to delete this customer?");
+    }
+</script>
+
 @endsection

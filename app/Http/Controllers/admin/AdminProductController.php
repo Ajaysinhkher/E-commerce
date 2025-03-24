@@ -155,7 +155,9 @@ class AdminProductController extends Controller
     {
         try {
             $product = Product::findOrFail($id);
-            $product->delete();
+            $product->delete();  //softdelete applied
+
+
             return redirect()->route('admin.products')->with('success', 'Product deleted successfully.');
         } catch (\Exception $e) {
             Log::error('AdminProductController@destroy Error: ' . $e->getMessage());

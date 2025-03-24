@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('quantity')->default(0);
             $table->string('slug')->unique();
             $table->timestamps();
+            
 
         });
     }

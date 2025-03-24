@@ -50,9 +50,18 @@ Route::middleware("auth:admin")->group(function () {
     // delete category:
     Route::delete('/categories/{id}',[AdminCategoryController::class,'destroy'])->name('admin.categories.delete');
 
+  
+
 
     // manage customers at admin side:
     Route::get("/customers", [AdminCustomerController::class, 'index'])->name('admin.customers');
+
+    // edit customer:
+    Route::get('/customers/edit/{id}',[AdminCustomerController::class,'edit'])->name('admin.customers.edit');
+    Route::put('/customers/update/{id}',[AdminCustomerController::class,'update'])->name('admin.customers.update');
+
+    // delete user/customer:
+    Route::delete('/customrs/{id}',[AdminCustomerController::class,'destroy'])->name('admin.customers.delete');
 
 
     Route::view("/orders", "admin.orders")->name("admin.orders");

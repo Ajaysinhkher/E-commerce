@@ -6,6 +6,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\shopController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
 
 // Guest User Routes
 Route::middleware("guest:customer")->group(function () {
@@ -38,6 +39,13 @@ Route::middleware("auth:customer")->group(function () {
 });
 
 // Checkout Route
-Route::get('/checkout', function () {
-    return view('checkout');
+// Route::get('/checkout', function () {
+//     return view('checkout');
+// });
+
+
+Route::middleware("auth:customer")->group(function(){
+    Route::get('/checkout',[OrderController::class,'index'])->name('checkout.index');
+    Route::post('/placeorder',[OrderController::class,'placeOrder'])->name('place.order');
+    Route::get('/orderplaced/{id}',[OrderController::class,'orderPlaced'])->name('order.success');
 });

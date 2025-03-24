@@ -13,7 +13,8 @@ class HomepageController extends Controller
     {
         try {
             // Fetch all products
-            $products = Product::all();
+            // $products = Product::all();
+            $products = Product::paginate(8);
 
             return view('index', ['products' => $products]);
         } catch (QueryException $e) {

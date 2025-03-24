@@ -21,5 +21,10 @@
             <x-product-card :product="$product" />
         @endforeach
     </div>
+
+      <!-- Pagination Links -->
+      <div class="mt-6">
+        {{ $products->links() }}
+    </div>
 </section>
  

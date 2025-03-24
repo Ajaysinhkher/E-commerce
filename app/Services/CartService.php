@@ -31,26 +31,27 @@ class CartService
 
     // Add item to cart
     public function addToCart($product)
-    {
-        try {
-            $cart = $this->getCart();
+{
+    try {
+        $cart = $this->getCart();
 
-            if (isset($cart[$product['id']])) {
-                $cart[$product['id']]['quantity'] += 1;
-            } else {
-                $cart[$product['id']] = [
-                    'name' => $product['name'],
-                    'price' => $product['price'],
-                    'quantity' => 1,
-                    'image' => $product['image'],
-                ];
-            }
-
-            Session::put($this->cartKey, $cart);
-        } catch (Exception $e) {
-            return ['error' => 'Failed to add product to cart: ' . $e->getMessage()];
+        if (isset($cart[$product->id])) {
+            $cart[$product->id]['quantity'] += 1;
+        } else {
+            $cart[$product->id] = [
+                'product_id' => $product->id,  // Ensure ID is included
+                'name' => $product->name,
+                'price' => $product->price,
+                'quantity' => 1,
+                'image' => $product->image,
+            ];
         }
+
+        Session::put($this->cartKey, $cart);
+    } catch (Exception $e) {
+        return ['error' => 'Failed to add product to cart: ' . $e->getMessage()];
     }
+}
 
     // Remove item from cart
     public function removeFromCart($productId)

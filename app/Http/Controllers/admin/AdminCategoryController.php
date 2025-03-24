@@ -60,10 +60,12 @@ class AdminCategoryController extends Controller
         try {
             $category = Category::findOrFail($id);
             return view('admin.categories.edit', ['category' => $category]);
+
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             Log::error('AdminCategoryController@edit Error: Category not found with ID ' . $id);
             return redirect()->route('admin.categories')->with('error', 'Category not found.');
         } catch (\Exception $e) {
+            
             Log::error('AdminCategoryController@edit Error: ' . $e->getMessage());
             return back()->with('error', 'Failed to load category edit page.');
         }
@@ -84,12 +86,15 @@ class AdminCategoryController extends Controller
             ]);
 
             return redirect()->route('admin.categories')->with('success', 'Category updated successfully');
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::error('AdminCategoryController@update Validation Error: ' . json_encode($e->errors()));
             return back()->withErrors($e->errors())->withInput();
+
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             Log::error('AdminCategoryController@update Error: Category not found with ID ' . $id);
             return redirect()->route('admin.categories')->with('error', 'Category not found.');
+
         } catch (\Exception $e) {
             Log::error('AdminCategoryController@update Error: ' . $e->getMessage());
             return back()->with('error', 'Failed to update category.');
@@ -103,9 +108,11 @@ class AdminCategoryController extends Controller
             $category->delete();
 
             return redirect()->route('admin.categories')->with('success', 'Category deleted successfully.');
+
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             Log::error('AdminCategoryController@destroy Error: Category not found with ID ' . $id);
             return redirect()->route('admin.categories')->with('error', 'Category not found.');
+
         } catch (\Exception $e) {
             Log::error('AdminCategoryController@destroy Error: ' . $e->getMessage());
             return back()->with('error', 'Failed to delete category.');

@@ -5,11 +5,12 @@ use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -20,6 +21,8 @@ class Product extends Model
         'status',
         'slug',
     ];
+
+    protected $dates = ['deleted_at']; // Ensure `deleted_at` is treated as a date
 
     public function categories(): BelongsToMany
     {
