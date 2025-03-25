@@ -96,4 +96,13 @@ class OrderController extends Controller
         
         return view('order-success', compact('order'));
     }
+
+    public function listOrders()
+    {
+
+        $orders = Order::with('user')->latest()->simplePaginate(10);
+    
+        return view('admin.orders', compact('orders'));
+    }
+
 }

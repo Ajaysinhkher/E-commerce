@@ -16,6 +16,7 @@ class AdminCustomerController extends Controller
             $customers = User::whereNull('deleted_at')->get(); // Only fetch active users
 
             return view('admin.customers', ['customers' => $customers]);
+            
         } catch (\Exception $e) {
             Log::error('AdminCustomerController@index Error: ' . $e->getMessage());
             return back()->with('error', 'Failed to load customers.');

@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Providers;
+use Illuminate\Support\Facades\View;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
+use App\Models\Page;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -21,6 +23,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Model::preventLazyLoading(true);
+
+        View::composer(['layouts.app', 'components.footer'], function ($view) {
+            $footerPage = Page::where('slug', 'footer')->first();
+            $footerContent =  $footerPage?->content ?? '<p>Default Footer</p>';
+
+            $view->with('footerContent', $footerContent);
+        });
         
     }
 }

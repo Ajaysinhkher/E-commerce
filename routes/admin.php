@@ -12,6 +12,10 @@ use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminCustomerController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\Admin\AdminPageController;
+
+
 
 Route::prefix("admin")->group(function () {
 
@@ -61,10 +65,21 @@ Route::middleware("auth:admin")->group(function () {
     Route::put('/customers/update/{id}',[AdminCustomerController::class,'update'])->name('admin.customers.update');
 
     // delete user/customer:
-    Route::delete('/customrs/{id}',[AdminCustomerController::class,'destroy'])->name('admin.customers.delete');
+    Route::delete('/customers/{id}',[AdminCustomerController::class,'destroy'])->name('admin.customers.delete');
 
 
-    Route::view("/orders", "admin.orders")->name("admin.orders");
+    Route::get("/orders",[OrderController::class,'listOrders'])->name("admin.orders");
+
+    // Route::get('/banner/edit', [BannerController::class, 'edit'])->name('banner.edit');
+    // Route::put('/banner/update', [BannerController::class, 'update'])->name('banner.update');
+
+    Route::get('/pages', [AdminPageController::class, 'index'])->name('admin.pages.index');
+    Route::get('/pages/create', [AdminPageController::class, 'create'])->name('admin.pages.create');
+    Route::post('/pages/store',[AdminPageController::class, 'store'])->name('admin.pages.store');
+    Route::get('/pages/edit/{id}',[AdminPageController::class,'edit'])->name('admin.pages.edit');
+    Route::put('/pages/update/{id}',[AdminPageController::class,'update'])->name('admin.pages.update');
+    Route::delete('/pages/{id}',[AdminPageController::class,'destroy'])->name('admin.pages.destroy');
+
     });
 });
 

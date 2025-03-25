@@ -28,7 +28,7 @@
   
 
     <!-- Footer -->
-    <x-footer></x-footer>
+    <x-footer :footer-content="$footerContent" ></x-footer>
     <script>
         $(document).ready(function() {
             $(".add-to-cart").click(function(e) {
