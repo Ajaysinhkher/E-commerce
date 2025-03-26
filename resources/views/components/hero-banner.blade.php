@@ -1,4 +1,4 @@
-<section class="relative bg-cover bg-center bg-no-repeat h-[50vh] flex items-center justify-center text-gray-900" 
+{{-- <section class="relative bg-cover bg-center bg-no-repeat h-[50vh] flex items-center justify-center text-gray-900" 
          style="background-image: url('{{ asset('storage/images/clothes1.jpg') }}');">
     
     <!-- Softer Dark Overlay for Better Contrast -->
@@ -16,4 +16,5 @@
             Shop Now
         </a>
     </div>
-</section>
+</section> --}}
+{!! getHeroBanner() !!}

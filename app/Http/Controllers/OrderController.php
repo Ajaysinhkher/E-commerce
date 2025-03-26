@@ -101,6 +101,10 @@ class OrderController extends Controller
     {
 
         $orders = Order::with('user')->latest()->simplePaginate(10);
+        // dd($orders);
+        // foreach ($orders as $order) {
+        //     dd($order->user->user_name); // Works correctly inside loop
+        // }
     
         return view('admin.orders', compact('orders'));
     }

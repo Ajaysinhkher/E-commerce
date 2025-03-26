@@ -25,6 +25,8 @@ class AdminPageController extends Controller
     
     public function store(Request $request)
     {
+
+        // dd($request->all());
         // Validate the request
         $request->validate([
             'name' => 'required|string|max:255',

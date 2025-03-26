@@ -10,8 +10,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-    
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body class="bg-gray-100 font-sans flex flex-col min-h-screen">
@@ -28,7 +27,8 @@
   
 
     <!-- Footer -->
-    <x-footer :footer-content="$footerContent" ></x-footer>
+    {{-- <x-footer :footer-content="$footerContent" ></x-footer> --}}
+    <x-footer></x-footer>
     <script>
         $(document).ready(function() {
             $(".add-to-cart").click(function(e) {

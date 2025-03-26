@@ -24,12 +24,18 @@ class AppServiceProvider extends ServiceProvider
     {
         Model::preventLazyLoading(true);
 
-        View::composer(['layouts.app', 'components.footer'], function ($view) {
-            $footerPage = Page::where('slug', 'footer')->first();
-            $footerContent =  $footerPage?->content ?? '<p>Default Footer</p>';
+        // View::composer(['layouts.app', 'components.footer'], function ($view) {
+        //     $footerPage = Page::where('slug', 'footer')->first();
+        //     $footerContent =  $footerPage?->content ?? '<p>Default Footer</p>';
 
-            $view->with('footerContent', $footerContent);
-        });
-        
+        //     $view->with('footerContent', $footerContent);
+        // });   
+
+        // View::composer( 'components.footer', function ($view) {
+        //     $footerPage = Page::where('slug', 'footer')->first();
+        //     $footerContent =  $footerPage?->content ?? '<p>Default Footer</p>';
+
+        //     $view->with('footerContent', $footerContent);
+        // });
     }
 }
