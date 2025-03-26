@@ -37,6 +37,7 @@
                 let productId = $(this).data("id");
                 console.log("Product ID:", productId);
 
+                // ajax request will send teh data: to CartController using defined route and will wait for json response
                 $.ajax({
                     url: "{{ route('cart.add') }}",
                     type: "POST",

@@ -5,6 +5,7 @@ use App\Models\Page;
 use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\PageRequest;
 
 class AdminPageController extends Controller
 {
@@ -23,15 +24,11 @@ class AdminPageController extends Controller
     }
 
     
-    public function store(Request $request)
+    public function store(PageRequest $request)
     {
 
-        // dd($request->all());
-        // Validate the request
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'content' => 'nullable|string',
-        ]);
+        // dd($request->content);
+        // Validate the request sing PageRequest class
     
         // Generate a unique slug from the name
         $slug = Str::slug($request->name);
@@ -62,13 +59,9 @@ class AdminPageController extends Controller
         
     }
 
-    public function update(Request $request, $id)
+    public function update(PageRequest $request, $id)
     {
-    // Validate the request
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'content' => 'nullable|string',
-    ]);
+    // Validate the request using PageRequest class
 
     // Find the page
     $page = Page::findOrFail($id);
@@ -95,8 +88,6 @@ class AdminPageController extends Controller
 
     return redirect()->route('admin.pages.index')->with('success', 'Page updated successfully!');
 }
-
-
 
 
     public function destroy($id)

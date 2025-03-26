@@ -14,6 +14,7 @@ class CartService
     {
         try {
             return Session::get($this->cartKey, []);
+
         } catch (Exception $e) {
             return ['error' => 'Failed to retrieve cart: ' . $e->getMessage()];
         }
@@ -31,12 +32,13 @@ class CartService
 
     // Add item to cart
     public function addToCart($product)
-{
+    {
     try {
         $cart = $this->getCart();
 
         if (isset($cart[$product->id])) {
             $cart[$product->id]['quantity'] += 1;
+
         } else {
             $cart[$product->id] = [
                 'product_id' => $product->id,  // Ensure ID is included

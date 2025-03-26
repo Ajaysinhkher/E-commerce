@@ -1,12 +1,13 @@
 <?php 
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Services\CartService;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Mail\OrderPlacedMail;
 
 class OrderController extends Controller
 {
@@ -56,6 +57,8 @@ class OrderController extends Controller
             'payment_method' => $request->payment_method,
         ]);
 
+        // dd($order);
+
         \Log::info('Cart Items Before Order:', $cartItems);
 
         // Store order items in order_items table
@@ -70,18 +73,28 @@ class OrderController extends Controller
             ]);
         }
 
+    
+
         \Log::info("Order Items:", ['items' => $order->orderItems]);
 
-       
+        
         // Check if order items were created
         if ($order->orderItems->isEmpty()) {
             \Log::error("Order items not saved!");
         }
 
+
+        // send mail asychronously
+        Mail::to($user->email)->queue(new OrderPlacedMail($order));
+
         // Clear cart after order is placed
         $this->cartService->clearCart();
 
+
+
         return redirect()->route('order.success', ['id' => $order->id])->with('success', 'Order placed successfully!');
+
+
     } catch (\Exception $e) {
         \Log::error('Order Placement Error: ' . $e->getMessage());
         return back()->with('error', 'Something went wrong: ' . $e->getMessage());
@@ -100,7 +113,7 @@ class OrderController extends Controller
     public function listOrders()
     {
 
-        $orders = Order::with('user')->latest()->simplePaginate(10);
+        $orders = Order::with('user')->latest()->paginate(8);
         // dd($orders);
         // foreach ($orders as $order) {
         //     dd($order->user->user_name); // Works correctly inside loop

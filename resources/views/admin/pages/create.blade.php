@@ -4,16 +4,7 @@
 <div class="p-4 bg-white rounded-lg shadow-md">
     <h2 class="text-xl font-bold text-gray-700 mb-3">Create Static Page</h2>
 
-    @if ($errors->any())
-        <div class="bg-red-100 text-red-800 p-2 rounded mb-3 text-sm">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
+   
     <form method="POST" action="{{ route('admin.pages.store') }}" enctype="multipart/form-data">
         @csrf
 

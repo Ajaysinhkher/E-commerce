@@ -26,6 +26,10 @@
     @if ($products->isEmpty())
         <p class="text-center text-gray-500 mt-6">No products available in this category.</p>
     @endif
+    {{-- pagination link --}}
+    <div class="mt-6 flex justify-center">
+        {{ $products->links() }}
+    </div>
 
     
 </main>

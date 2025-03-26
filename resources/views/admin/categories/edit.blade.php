@@ -5,6 +5,19 @@
     <div class="bg-white rounded-lg shadow-md max-w-2xl mx-auto p-5">
         <h2 class="text-xl font-semibold mb-3">Edit Category</h2>
 
+        {{-- show validation errors --}}
+        @if ($errors->any())
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md mb-4">
+            <strong>Whoops! Something went wrong.</strong>
+            <ul class="list-disc pl-5">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
+
         <form action="{{ route('admin.categories.update', $category->id) }}" method="POST">
             @csrf
             @method('PUT')

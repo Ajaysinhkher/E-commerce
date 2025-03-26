@@ -14,7 +14,7 @@ class ShopController extends Controller
     {
         try {
             $categories = Category::all();
-            $products = Product::all();
+            $products = Product::paginate(10);
 
             return view('shop', [
                 'categories' => $categories,

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\RegisterRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
@@ -22,17 +23,11 @@ class RegisterController extends Controller
     /**
      * Handle user registration.
      */
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
         try {
-            // Validate user input
-            $request->validate([
-                'user_name' => 'required|string|max:255',
-                'email' => 'required|email|unique:users,email',
-                'phone' => 'required|string|min:10|max:15|unique:users,phone',
-                'password' => 'required|min:6|confirmed',
-            ]);
-
+            // Validate user input using RegisterRequest class
+            
             // Create new user
             $user = User::create([
                 'user_name' => $request->user_name,

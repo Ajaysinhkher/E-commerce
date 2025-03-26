@@ -31,6 +31,8 @@ class CartController extends Controller
     public function addToCart(Request $request)
     {
         try {
+
+            // id coming from ajax request
             $product = Product::findOrFail($request->id);
             $this->cartService->addToCart($product);
 

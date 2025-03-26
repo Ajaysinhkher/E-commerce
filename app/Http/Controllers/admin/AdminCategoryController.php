@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
@@ -32,12 +33,11 @@ class AdminCategoryController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
         try {
-            $request->validate([
-                'name' => 'required|string|max:255',
-            ]);
+            
+            // validation using CategoryRequst class
 
             // Create category 
             Category::create([
@@ -71,13 +71,11 @@ class AdminCategoryController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function update(CategoryRequest $request, $id)
     {
         try {
-            $request->validate([
-                'name' => 'required|string|max:255',
-            ]);
-
+        
+            // validation using CategoryRequest Class
             $category = Category::findOrFail($id);
 
             $category->update([

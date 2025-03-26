@@ -32,7 +32,7 @@ Route::middleware("auth:admin")->group(function () {
     
     // Admin dashboard product management routes:
     Route::get('/products',[AdminProductController::class,'index'])->name('admin.products');
-    Route::get('products/create',[AdminProductController::class,'create'])->name('admin.products.create');
+    Route::get('/products/create',[AdminProductController::class,'create'])->name('admin.products.create');
     Route::post('/products/store',[AdminProductController::class,'store'])->name('admin.products.store');
 
     // edit-product routes
@@ -46,7 +46,7 @@ Route::middleware("auth:admin")->group(function () {
     // categories management routes:
     Route::get('/categories', [AdminCategoryController::class,'index'])->name("admin.categories"); //convert it to index path
     Route::get('/categories/create',[AdminCategoryController::class,'create'])->name('admin.categories.create');
-    Route::post('categories/store',[AdminCategoryController::class,'store'])->name('admin.categories.store');
+    Route::post('/categories/store',[AdminCategoryController::class,'store'])->name('admin.categories.store');
 
     // edit category:
     Route::get('/categories/edit/{id}',[AdminCategoryController::class,'edit'])->name('admin.categories.edit');

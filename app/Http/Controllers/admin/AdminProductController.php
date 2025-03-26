@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\ProductRequest;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
@@ -18,7 +19,7 @@ class AdminProductController extends Controller
     public function index()
     {
         try {
-            $products = Product::query()->simplePaginate(4);
+            $products = Product::paginate(4);
             return view('admin.products', ['products' => $products]);
         } catch (\Exception $e) {
             Log::error('AdminProductController@index Error: ' . $e->getMessage());
@@ -40,23 +41,12 @@ class AdminProductController extends Controller
         }
     }
 
-    /**
-     * Store a newly created product in the database.
-     */
-    public function store(Request $request)
+ 
+    // store newly added product in db: validation done using Productrequest class 
+    public function store(ProductRequest $request)
     {
         try {
-            $validatedData = $request->validate([
-                'name' => 'required|string|max:255',
-                'price' => 'required|numeric|min:0',
-                'description' => 'required|string',
-                'quantity' => 'required|integer|min:0',
-                'status' => 'required|in:available,unavailable',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:7000',
-                'categories' => 'required|array',
-                'categories.*' => 'exists:categories,id',
-            ]);
-
+          
             // Handle Image Upload
             $imagePath = null;
             if ($request->hasFile('image')) {
@@ -102,18 +92,10 @@ class AdminProductController extends Controller
     /**
      * Update the specified product in the database.
      */
-    public function update(Request $request, $id)
+    public function update(ProductRequest $request, $id)
     {
         try {
-            $validatedData = $request->validate([
-                'name' => 'required|string|max:255',
-                'price' => 'required|numeric|min:0',
-                'description' => 'required|string',
-                'quantity' => 'required|integer|min:0',
-                'status' => 'required|in:available,unavailable',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:7000',
-            ]);
-
+            
             $product = Product::findOrFail($id);
 
             // Handle image upload

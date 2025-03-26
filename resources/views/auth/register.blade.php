@@ -22,16 +22,6 @@
                 <p class="mt-1 text-sm text-gray-700">Sign up to start shopping</p>
             </div>
 
-            <!-- Show validation errors -->
-            @if ($errors->any())
-                <div class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
-                    <ul class="list-disc pl-5">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
 
             <form class="mt-4 space-y-3" action="{{ route('register') }}" method="POST">
                 @csrf
