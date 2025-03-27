@@ -27,7 +27,7 @@ class LoginController extends Controller
             // Create session 
             if (Auth::guard("customer")->attempt($credentials)) {
                 $request->session()->regenerate();
-                return redirect(route("home"));
+                return redirect()->route("home");
             }
 
             return back()->withErrors([
@@ -42,15 +42,18 @@ class LoginController extends Controller
 
     public function logout(Request $request) {
         try {
+           
             Auth::guard("customer")->logout();
-            $request->session()->invalidate();
+           
+            // $request->session()->invalidate();
+            $request->session()->forget('customer_auth');  //to delete particular customer sessions
             $request->session()->regenerateToken();
 
-            return redirect(route("customer.login"));
+            return redirect()->route("customer.login");
             
         } catch (Exception $e) {
             Log::error('LoginController@logout Error: ' . $e->getMessage());
-            return redirect(route("customer.login"))->with('error', 'Failed to log out. Please try again.');
+            return redirect()->route("customer.login")->with('error', 'Failed to log out. Please try again.');
         }
     }
 }

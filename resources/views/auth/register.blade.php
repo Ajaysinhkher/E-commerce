@@ -1,6 +1,8 @@
 @vite(['resources/js/app.js','resources/css/app.css'])
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 
 <div class="relative min-h-screen flex items-center justify-center bg-gray-100">
     <div class="relative z-10 w-full max-w-3xl bg-white rounded-lg shadow-lg flex overflow-hidden">
@@ -22,8 +24,7 @@
                 <p class="mt-1 text-sm text-gray-700">Sign up to start shopping</p>
             </div>
 
-
-            <form class="mt-4 space-y-3" action="{{ route('register') }}" method="POST">
+            <form id="registerform" class="mt-4 space-y-3" action="{{ route('register') }}" method="POST">
                 @csrf
                 <div>
                     <label for="user_name" class="block text-sm font-medium text-gray-800">Full Name</label>
@@ -80,10 +81,72 @@
                 </div>
             </form>
             
-
             <p class="mt-4 text-center text-sm text-gray-700">
                 Already have an account? <a href="{{ route('customer.login') }}" class="font-semibold text-blue-500 hover:text-red-600">Login</a>
             </p>
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $("#registerform").validate({
+            rules: {
+                user_name: {
+                    required: true,
+                    minlength: 3
+                },
+                email: {
+                    required: true,
+                    email: true
+                },
+                phone: {
+                    required: true,
+                    digits: true,
+                    minlength: 10,
+                    maxlength: 15
+                },
+                password: {
+                    required: true,
+                    minlength: 6
+                },
+                password_confirmation: {
+                    required: true,
+                    equalTo: "#password"
+                }
+            },
+            messages: {
+                user_name: {
+                    required: "Please enter your full name",
+                    minlength: "Name must be at least 3 characters long"
+                },
+                email: {
+                    required: "Please enter your email",
+                    email: "Enter a valid email address"
+                },
+                phone: {
+                    required: "Please enter your contact number",
+                    digits: "Only numbers are allowed",
+                    minlength: "Phone number should be at least 10 digits",
+                    maxlength: "Phone number should not exceed 15 digits"
+                },
+                password: {
+                    required: "Please enter a password",
+                    minlength: "Password must be at least 6 characters long"
+                },
+                password_confirmation: {
+                    required: "Please confirm your password",
+                    equalTo: "Passwords do not match"
+                }
+            },
+            errorElement: "p",
+            errorClass: "text-sm text-red-500 mt-1",
+            highlight: function (element) {
+                $(element).addClass("border-red-500");
+            },
+            unhighlight: function (element) {
+                $(element).removeClass("border-red-500");
+            }
+        });
+    });
+</script>

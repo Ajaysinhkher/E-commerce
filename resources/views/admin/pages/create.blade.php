@@ -35,10 +35,12 @@
             <a href="{{ route('admin.pages.index') }}" class="bg-gray-300 text-gray-700 px-4 py-1.5 rounded hover:bg-gray-400 text-sm">Cancel</a>
         </div>
     </form>
-</div>
-@endsection
 
-@section('scripts')
+    
+</div>
+
+
+@push('scripts')
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
@@ -60,4 +62,5 @@
             });
         });
     </script>
+@endpush
 @endsection

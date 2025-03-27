@@ -17,11 +17,12 @@
          @endif
 
 
-        <form action="{{ route('admin.categories.store') }}" method="POST">
+        <form id="categoryForm" action="{{ route('admin.categories.store') }}" method="POST">
             @csrf
             <div class="mb-3">
                 <label class="block text-sm font-medium">Category Name</label>
                 <input type="text" name="name" class="w-full px-3 py-1.5 border rounded focus:ring focus:ring-blue-200" required>
+                <span class="error-message text-red-500 text-xs mt-1"></span>
             </div>
 
             <div class="flex justify-end space-x-2">
@@ -31,4 +32,35 @@
         </form>
     </div>
 </div>
+
+{{-- jquery validations: --}}
+
+@push('scripts')
+<script>
+    $(document).ready(function () {
+        $("#categoryForm").validate({
+            rules: {
+                name: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 255
+                }
+            },
+            messages: {
+                name: {
+                    required: "Category name is required.",
+                    minlength: "Category name must be at least 3 characters.",
+                    maxlength: "Category name cannot exceed 255 characters."
+                }
+            },
+            errorElement: "span",
+            errorPlacement: function (error, element) {
+            error.addClass("text-red-500 text-xs mt-1");
+            element.closest("div").find(".error-message").html(error);
+            }
+
+        });
+    });
+</script>
+@endpush
 @endsection

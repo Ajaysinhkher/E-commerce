@@ -80,9 +80,19 @@ class AdminProductController extends Controller
      */
     public function edit($id)
     {
+
         try {
             $product = Product::findOrFail($id);
-            return view('admin.products.edit', ['product' => $product]);
+            $categories = Category::all(); //fetch all categories
+            $selectedCategories = $product->categories->pluck('id')->toArray();
+
+            return view('admin.products.edit', [
+                'product' => $product,
+                'categories'=>$categories,
+                'selectedCategories'=>$selectedCategories
+            ]);
+
+
         } catch (\Exception $e) {
             Log::error('AdminProductController@edit Error: ' . $e->getMessage());
             return back()->with('error', 'Failed to load product details.');

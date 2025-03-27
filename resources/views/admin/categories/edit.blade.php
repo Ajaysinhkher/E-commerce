@@ -5,7 +5,7 @@
     <div class="bg-white rounded-lg shadow-md max-w-2xl mx-auto p-5">
         <h2 class="text-xl font-semibold mb-3">Edit Category</h2>
 
-        {{-- show validation errors --}}
+        {{-- Show validation errors --}}
         @if ($errors->any())
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md mb-4">
             <strong>Whoops! Something went wrong.</strong>
@@ -17,8 +17,7 @@
         </div>
         @endif
 
-
-        <form action="{{ route('admin.categories.update', $category->id) }}" method="POST">
+        <form id="editCategoryForm" action="{{ route('admin.categories.update', $category->id) }}" method="POST">
             @csrf
             @method('PUT')
             
@@ -26,6 +25,7 @@
                 <label class="block text-sm font-medium">Category Name</label>
                 <input type="text" name="name" value="{{ old('name', $category->name) }}" 
                     class="w-full px-3 py-1.5 border rounded focus:ring focus:ring-blue-200" required>
+                <span class="error-message text-red-500 text-xs mt-1 block"></span>
             </div>
 
             <div class="flex justify-end space-x-2">
@@ -41,4 +41,37 @@
         </form>
     </div>
 </div>
+
+{{-- jQuery Validation --}}
+@push('scripts')
+
+<script>
+    $(document).ready(function () {
+        $("#editCategoryForm").validate({
+            rules: {
+                name: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 255
+                }
+            },
+            messages: {
+                name: {
+                    required: "Category name is required.",
+                    minlength: "Category name must be at least 3 characters.",
+                    maxlength: "Category name cannot exceed 255 characters."
+                }
+            },
+            errorElement: "span",
+            errorPlacement: function (error, element) {
+                error.addClass("text-red-500 text-xs mt-1 block");
+                element.closest("div").find(".error-message").html(error);
+            },
+            success: function (label) {
+                label.closest("div").find(".error-message").html("");
+            }
+        });
+    });
+</script>
+@endpush
 @endsection

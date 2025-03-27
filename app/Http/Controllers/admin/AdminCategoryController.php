@@ -17,6 +17,7 @@ class AdminCategoryController extends Controller
         try {
             $categories = Category::all();
             return view('admin.categories', ['categories' => $categories]);
+            
         } catch (\Exception $e) {
             Log::error('AdminCategoryController@index Error: ' . $e->getMessage());
             return back()->with('error', 'Failed to load categories.');

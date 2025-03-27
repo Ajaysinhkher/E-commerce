@@ -20,5 +20,5 @@
         <button class="text-gray-500 hover:text-red-600 transition-all duration-200 text-xl">
             <i class="fas fa-trash-alt"></i>
         </button>
-    </div>
+</div>
 </div>

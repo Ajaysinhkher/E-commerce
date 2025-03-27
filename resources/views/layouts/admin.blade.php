@@ -7,7 +7,7 @@
 
     @vite(['resources/js/app.js', 'resources/css/app.css'])
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    {{-- <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"> --}}
 
 </head>
 <body class="bg-gray-100">
@@ -84,6 +84,14 @@
         </main>
     </div>
 
-    @yield('scripts')
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+  
+   @stack('scripts')
+   
+
+  
+   
 </body>
 </html>
