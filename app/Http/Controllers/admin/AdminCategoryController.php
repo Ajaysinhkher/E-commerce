@@ -44,6 +44,7 @@ class AdminCategoryController extends Controller
             Category::create([
                 'name' => $request->name,
                 'slug' => Str::slug($request->name),
+                'status'=>$request->status ?? 'active',
             ]);
 
             return redirect()->route('admin.categories')->with('success', 'Category added successfully!');
@@ -82,6 +83,7 @@ class AdminCategoryController extends Controller
             $category->update([
                 'name' => $request->name,
                 'slug' => Str::slug($request->name),
+                'status'=>$request->status,
             ]);
 
             return redirect()->route('admin.categories')->with('success', 'Category updated successfully');

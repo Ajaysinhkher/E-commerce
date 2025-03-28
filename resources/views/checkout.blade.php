@@ -18,7 +18,7 @@
                 <input type="text" name="state" placeholder="State" required class="p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300">
                 <input type="text" name="postal_code" placeholder="Postal Code" required class="col-span-2 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300">
             </div>
-
+            
             <!-- Payment Method -->
             <h3 class="text-lg font-medium text-gray-700 mt-4 mb-2">Payment Method</h3>
             <div class="flex space-x-6">

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\HomepageController;
-use App\Http\Controllers\shopController;
+use App\Http\Controllers\ShopController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 
@@ -25,8 +25,8 @@ Route::middleware("auth:customer")->group(function () {
 
 // General Public Routes
 Route::get("/", [HomepageController::class, "index"])->name("home");
-Route::get('/shop', [shopController::class, 'shop'])->name('shop');
-Route::get('/product-details/{id}', [shopController::class, 'show'])->name('product.details');
+Route::get('/shop', [ShopController::class, 'shop'])->name('shop');
+Route::get('/product-details/{id}', [ShopController::class, 'show'])->name('product.details');
 
 // Cart Routes
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');

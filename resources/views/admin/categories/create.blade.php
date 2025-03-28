@@ -14,14 +14,23 @@
                 @endforeach
             </ul>
         </div>
-         @endif
-
+        @endif
 
         <form id="categoryForm" action="{{ route('admin.categories.store') }}" method="POST">
             @csrf
             <div class="mb-3">
                 <label class="block text-sm font-medium">Category Name</label>
                 <input type="text" name="name" class="w-full px-3 py-1.5 border rounded focus:ring focus:ring-blue-200" required>
+                <span class="error-message text-red-500 text-xs mt-1"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="block text-sm font-medium">Status</label>
+                <select name="status" class="w-full px-3 py-1.5 border rounded focus:ring focus:ring-blue-200" required>
+                    <option value="">Select Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
                 <span class="error-message text-red-500 text-xs mt-1"></span>
             </div>
 
@@ -33,8 +42,6 @@
     </div>
 </div>
 
-{{-- jquery validations: --}}
-
 @push('scripts')
 <script>
     $(document).ready(function () {
@@ -44,6 +51,11 @@
                     required: true,
                     minlength: 3,
                     maxlength: 255
+                },
+                status: {
+                    required: true,
+                    // Ensure the value is either 'active' or 'inactive'
+                    inList: ["active", "inactive"]
                 }
             },
             messages: {
@@ -51,15 +63,23 @@
                     required: "Category name is required.",
                     minlength: "Category name must be at least 3 characters.",
                     maxlength: "Category name cannot exceed 255 characters."
+                },
+                status: {
+                    required: "Please select a status.",
+                    inList: "Status must be either Active or Inactive."
                 }
             },
             errorElement: "span",
             errorPlacement: function (error, element) {
-            error.addClass("text-red-500 text-xs mt-1");
-            element.closest("div").find(".error-message").html(error);
+                error.addClass("text-red-500 text-xs mt-1");
+                element.closest("div").find(".error-message").html(error);
             }
-
         });
+
+        // Custom validation method for inList (to check if value is in the allowed list)
+        $.validator.addMethod("inList", function(value, element, params) {
+            return this.optional(element) || params.indexOf(value) !== -1;
+        }, "Please select a valid option.");
     });
 </script>
 @endpush

@@ -3,7 +3,12 @@
         {{-- <p>&copy; 2025 Shopper Store. All rights reserved.</p> --}}
         {{-- {!! $footerContent !!} --}}
       
-        {!! getFooterContent() !!}
+        {{-- {!! getFooterContent() !!} --}}
+       
+            
+                {!! getPageContent('footer', '<p>&copy; 2025 Shopper Store. All rights reserved.</p>') !!}
+       
+        
 
     </div>
 </footer>

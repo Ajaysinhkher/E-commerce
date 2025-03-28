@@ -28,6 +28,16 @@
                 <span class="error-message text-red-500 text-xs mt-1 block"></span>
             </div>
 
+            <div class="mb-3">
+                <label class="block text-sm font-medium">Status</label>
+                <select name="status" class="w-full px-3 py-1.5 border rounded focus:ring focus:ring-blue-200" required>
+                    <option value="">Select Status</option>
+                    <option value="active" {{ old('status', $category->status) == 'active' ? 'selected' : '' }}>Active</option>
+                    <option value="inactive" {{ old('status', $category->status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                </select>
+                <span class="error-message text-red-500 text-xs mt-1 block"></span>
+            </div>
+
             <div class="flex justify-end space-x-2">
                 <a href="{{ route('admin.categories') }}" 
                     class="px-3 py-1.5 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 text-sm">
@@ -36,7 +46,8 @@
                 <button type="submit" 
                     class="px-3 py-1.5 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
                     Update
-                </button>
+                </b
+utton>
             </div>
         </form>
     </div>
@@ -44,7 +55,6 @@
 
 {{-- jQuery Validation --}}
 @push('scripts')
-
 <script>
     $(document).ready(function () {
         $("#editCategoryForm").validate({
@@ -53,6 +63,10 @@
                     required: true,
                     minlength: 3,
                     maxlength: 255
+                },
+                status: {
+                    required: true,
+                    inList: ["active", "inactive"]
                 }
             },
             messages: {
@@ -60,6 +74,10 @@
                     required: "Category name is required.",
                     minlength: "Category name must be at least 3 characters.",
                     maxlength: "Category name cannot exceed 255 characters."
+                },
+                status: {
+                    required: "Please select a status.",
+                    inList: "Status must be either Active or Inactive."
                 }
             },
             errorElement: "span",
@@ -71,6 +89,11 @@
                 label.closest("div").find(".error-message").html("");
             }
         });
+
+        // Custom validation method for inList (to check if value is in the allowed list)
+        $.validator.addMethod("inList", function(value, element, params) {
+            return this.optional(element) || params.indexOf(value) !== -1;
+        }, "Please select a valid option.");
     });
 </script>
 @endpush

@@ -47,7 +47,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin.orders') }}" class="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded">
+                    <a href="{{ route('admin.orders.index') }}" class="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded">
                         <i class="uil uil-shopping-cart text-lg"></i>
                         <span>Orders</span>
                     </a>

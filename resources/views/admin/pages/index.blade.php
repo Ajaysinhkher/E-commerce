@@ -12,9 +12,7 @@
             <tr class="bg-gray-100 text-left">
                 <th class="p-3 border">Name</th>
                 <th class="p-3 border">Slug</th>
-                {{-- <th class="p-3 border">Image</th> --}}
-                {{-- <th class="p-3 border">Content (HTML)</th> --}}
-              
+                <th class="p-3 border">Status</th>
                 <th class="p-3 border">Actions</th>
             </tr>
         </thead>
@@ -22,10 +20,14 @@
             @foreach ($pages as $page)
             <tr class="hover:bg-gray-50 transition">
                 <td class="p-3 border">{{ $page->name }}</td>
-                <td class="p-3 border">{{ $page->slug }}</td>     
+                <td class="p-3 border">{{ $page->slug }}</td>
+                <td class="p-3 border">
+                    <span class="{{ $page->status == 'active' ? 'text-green-600' : 'text-red-600' }}">
+                        {{ ucfirst($page->status) }}
+                    </span>
+                </td>
                 <td class="p-3 border flex space-x-2">
                     <a href="{{ route('admin.pages.edit', ['id' => $page->id]) }}" class="text-blue-500 hover:underline">✏ Edit</a>
-                    
                     <form action="{{ route('admin.pages.destroy', ['id' => $page->id]) }}" method="POST" onsubmit="return confirm('Are you sure?')">
                         @csrf
                         @method('DELETE')

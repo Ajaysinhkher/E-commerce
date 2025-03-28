@@ -12,7 +12,7 @@ use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminCustomerController;
 use App\Http\Controllers\CartController;
-use App\Http\Controllers\OrderController;
+use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminPageController;
 
 
@@ -68,8 +68,10 @@ Route::middleware("auth:admin")->group(function () {
     Route::delete('/customers/{id}',[AdminCustomerController::class,'destroy'])->name('admin.customers.delete');
 
 
-    Route::get("/orders",[OrderController::class,'listOrders'])->name("admin.orders");
-
+    Route::get("/orders",[AdminOrderController::class,'index'])->name("admin.orders.index");
+    Route::get("/orders/{id}",[AdminOrderController::class,'show'])->name("admin.orders.show");
+    Route::put("/orders/update/{id}",[AdminOrderController::class,'update'])->name("admin.order.update");
+  
     // Route::get('/banner/edit', [BannerController::class, 'edit'])->name('banner.edit');
     // Route::put('/banner/update', [BannerController::class, 'update'])->name('banner.update');
 

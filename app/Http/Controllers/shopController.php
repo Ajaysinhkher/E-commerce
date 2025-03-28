@@ -10,15 +10,38 @@ use Exception;
 
 class ShopController extends Controller
 {
-    public function shop()
+    public function shop(Request $request)
     {
         try {
-            $categories = Category::all();
-            $products = Product::paginate(10);
+            $categories = Category::where('status','active')->get();
+
+            // get selected category from query parameter:
+            $categorySlug = $request->query('category');
+           
+            
+            // start the product query:
+            $query  = Product::query();
+
+             // Apply category filter if a category is selected
+             if ($categorySlug) {
+                $query->whereHas('categories', function ($q) use ($categorySlug) {
+                    $q->where('slug', $categorySlug);
+                });
+            }
+
+            // dd($query);
+            // dd($query->toSql(), $query->getBindings());
+
+
+            // Fetch products with pagination
+            $products = $query->paginate(10);
+            // dd($products->toArray());
 
             return view('shop', [
                 'categories' => $categories,
-                'products' => $products
+                'products' => $products,
+                'selectedCategory' => $categorySlug,  //pass the selecetedCategory to view
+                
             ]);
         } catch (Exception $e) {
             Log::error('ShopController@shop Error: ' . $e->getMessage());

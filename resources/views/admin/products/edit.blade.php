@@ -39,8 +39,8 @@
                     <label for="status" class="text-sm font-medium">Status</label>
                     <select id="status" name="status" class="w-full px-3 py-1.5 border rounded text-sm" required>
                         <option value="">Select Status</option>
-                        <option value="available" {{ $product->status == 'available' ? 'selected' : '' }}>Available</option>
-                        <option value="not_available" {{ $product->status == 'not_available' ? 'selected' : '' }}>Not Available</option>
+                        <option value="available" {{ $product->status == 'available' ? 'selected' : '' }}>available</option>
+                        <option value="unavailable" {{ $product->status == 'unavailable' ? 'selected' : '' }}>unvailable</option>
                     </select>
                     <span class="error-message text-red-500 text-xs"></span>
                 </div>

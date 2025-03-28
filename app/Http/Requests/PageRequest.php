@@ -24,6 +24,7 @@ class PageRequest extends FormRequest
         return [
             'name' => 'required|string|max:255|unique:pages,name,'. $this->route('id'),
             'content' => 'nullable|string',
+            'status' => 'required|in:active,inactive',
         ];
     }
 }

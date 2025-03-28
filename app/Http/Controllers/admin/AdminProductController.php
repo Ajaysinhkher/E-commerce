@@ -21,6 +21,7 @@ class AdminProductController extends Controller
         try {
             $products = Product::paginate(4);
             return view('admin.products', ['products' => $products]);
+
         } catch (\Exception $e) {
             Log::error('AdminProductController@index Error: ' . $e->getMessage());
             return back()->with('error', 'Failed to load products.');

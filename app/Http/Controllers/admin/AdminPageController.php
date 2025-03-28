@@ -44,6 +44,7 @@ class AdminPageController extends Controller
             'name' => $request->name,
             'slug' => $slug,
             'content' => $request->content,
+            'status' => $request->status ?? 'active',
         ]);
     
         return redirect()->route('admin.pages.index')->with('success', 'Page created successfully!');
@@ -84,6 +85,7 @@ class AdminPageController extends Controller
         'name' => $request->name,
         'slug' => $slug,
         'content' => $request->content,
+        'status' => $request->status,
     ]);
 
     return redirect()->route('admin.pages.index')->with('success', 'Page updated successfully!');

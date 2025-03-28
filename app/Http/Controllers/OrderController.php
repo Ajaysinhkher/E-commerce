@@ -110,16 +110,5 @@ class OrderController extends Controller
         return view('order-success', compact('order'));
     }
 
-    public function listOrders()
-    {
-
-        $orders = Order::with('user')->latest()->paginate(8);
-        // dd($orders);
-        // foreach ($orders as $order) {
-        //     dd($order->user->user_name); // Works correctly inside loop
-        // }
-    
-        return view('admin.orders', compact('orders'));
-    }
 
 }

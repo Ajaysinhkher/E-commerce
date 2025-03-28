@@ -34,3 +34,6 @@
         <i class="uil uil-heart text-red-500 text-lg"></i>
     </button>
 </div>
+
+
+

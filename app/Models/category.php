@@ -14,12 +14,13 @@ class Category extends Model
     protected $fillable = [
         'name',
         'slug',
+        'status'
     ];
 
     protected $dates = ['deleted_at']; // Ensure `deleted_at` is treated as a date
     
     public function products() :BelongsToMany
     {
-        return $this->hasMany(Product::class,'product_categories', 'category_id', 'product_id',);
+        return $this->belongsToMany(Product::class,'product_categories', 'category_id', 'product_id',);
     }
 }

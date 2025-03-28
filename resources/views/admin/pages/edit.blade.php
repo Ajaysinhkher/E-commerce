@@ -47,6 +47,19 @@
                 <span class="text-red-500 text-xs">{{ $message }}</span>
             @enderror
         </div>
+        
+        <!-- Status -->
+        <div class="mb-3">
+            <label for="status" class="block text-gray-700 font-medium text-sm mb-1">Status</label>
+            <select name="status" id="status" class="w-full p-2 border rounded text-sm">
+                <option value="active" {{ old('status', $page->status) === 'active' ? 'selected' : '' }}>Active</option>
+                <option value="inactive" {{ old('status', $page->status) === 'inactive' ? 'selected' : '' }}>Inactive</option>
+            </select>
+            @error('status')
+                <span class="text-red-500 text-xs">{{ $message }}</span>
+            @enderror
+        </div>
+
 
         <!-- Buttons -->
         <div class="flex space-x-2">

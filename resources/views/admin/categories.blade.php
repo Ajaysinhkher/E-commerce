@@ -13,19 +13,23 @@
                 <th class="p-3 border">ID</th>
                 <th class="p-3 border">Name</th>
                 <th class="p-3 border">Created At</th>
+                <th class="p-3 border">Status</th>
                 <th class="p-3 border">Actions</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($categories as $category )    
+            @foreach ($categories as $category)    
             <tr class="hover:bg-gray-50 transition">
                 <td class="p-3 border">{{ $category['id'] }}</td>
                 <td class="p-3 border">{{ $category['name'] }}</td>
                 <td class="p-3 border">{{ $category->created_at->format('d M, Y h:i A') }}</td>
-        
                 <td class="p-3 border">
-                    {{-- passing id of the category to be edited to its defined route --}}
-                    <a href="{{route('admin.categories.edit',['id' => $category->id])}}" class="text-blue-500 hover:underline mr-2">✏ Edit</a>
+                    <span class="{{ $category->status == 'active' ? 'text-green-600' : 'text-red-600' }}">
+                        {{ ucfirst($category->status) }}
+                    </span>
+                </td>
+                <td class="p-3 border">
+                    <a href="{{ route('admin.categories.edit', ['id' => $category->id]) }}" class="text-blue-500 hover:underline mr-2">✏ Edit</a>
                     <form action="{{ route('admin.categories.delete', ['id' => $category->id]) }}" method="POST" class="inline">
                         @csrf
                         @method('DELETE')

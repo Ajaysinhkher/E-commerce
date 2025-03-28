@@ -29,6 +29,8 @@
     <!-- Footer -->
     {{-- <x-footer :footer-content="$footerContent" ></x-footer> --}}
     <x-footer></x-footer>
+    
+    <x-toast />
     <script>
         $(document).ready(function() {
             $(".add-to-cart").click(function(e) {
@@ -50,15 +52,8 @@
                     success: function(response) {
                         if (response.success) {
                             updateCartCount(response.cartCount);
-                            
+                            showToast(response.message,'success',2000);
                             // Show alert once
-                            if (!$(".cart-alert").length) {
-                                $("body").append('<div class="cart-alert fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-md">Item added to cart</div>');
-                                
-                                setTimeout(function() {
-                                    $(".cart-alert").fadeOut(500, function() { $(this).remove(); });
-                                }, 2000);
-                            }
                         } else {
                             alert("Error adding to cart!");
                         }
@@ -83,8 +78,14 @@
           }
         }
 
-
-    
+        @if(session('success'))
+        showToast("{{ session('success') }}",'success',3000);
+        @endif
         </script>
+
+
+       
 </body>
+
+
 </html>

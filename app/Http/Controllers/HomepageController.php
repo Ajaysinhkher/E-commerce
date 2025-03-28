@@ -14,9 +14,10 @@ class HomepageController extends Controller
         try {
             // Fetch all products
             // $products = Product::all();
-            $products = Product::paginate(8);
+            $products = Product::where('status', 'available')->paginate(8);
 
             return view('index', ['products' => $products]);
+            
         } catch (QueryException $e) {
             // Log the error for debugging
             Log::error('Database error fetching products: ' . $e->getMessage());
