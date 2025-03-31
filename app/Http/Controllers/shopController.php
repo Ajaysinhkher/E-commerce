@@ -29,11 +29,7 @@ class ShopController extends Controller
                 });
             }
 
-            // dd($query);
-            // dd($query->toSql(), $query->getBindings());
-
-
-            // Fetch products with pagination
+          // Fetch products with pagination
             $products = $query->paginate(10);
             // dd($products->toArray());
 

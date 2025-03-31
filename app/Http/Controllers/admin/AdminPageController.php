@@ -12,7 +12,6 @@ class AdminPageController extends Controller
     public function index()
     {
         $pages = Page::paginate(10);
-     
         return view('admin.pages.index',compact('pages'));
     }
 
@@ -20,7 +19,6 @@ class AdminPageController extends Controller
     {
 
         return view('admin.pages.create');
-
     }
 
     

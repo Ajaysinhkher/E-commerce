@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Log;
 
 class AdminProductController extends Controller
 {
+    private const IMAGE_PATH = 'products';
+
+    
     /**
      * Display a listing of the products.
      */
@@ -52,7 +55,7 @@ class AdminProductController extends Controller
             $imagePath = null;
             if ($request->hasFile('image')) {
                 $imagePath = $request->file('image')->store('products', 'public');
-                $imagePath = 'products/' . basename($imagePath);
+                $imagePath =  self::IMAGE_PATH . '/' . basename($imagePath);
             }
 
             // Create Product
@@ -116,7 +119,7 @@ class AdminProductController extends Controller
                 }
 
                 $imagePath = $request->file('image')->store('products', 'public');
-                $imagePath = 'products/' . basename($imagePath);
+                $imagePath = self::IMAGE_PATH .'/' . basename($imagePath);
                 $product->image = $imagePath;
             }
 

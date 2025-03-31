@@ -31,5 +31,29 @@ class HomepageController extends Controller
             return redirect()->back()->with('error', 'An unexpected error occurred. Please try again later.');
         }
     }
+
+
+    // search funtion 
+    public function search(Request $request)
+    {
+
+    $query = $request->input('query');
+
+    $products = Product::where('name', 'LIKE', "%{$query}%")
+                ->orWhere('description', 'LIKE', "%{$query}%")
+                ->where('status', 'available')
+                ->limit(5)
+                ->get();
+
+
+
+    // Check if it's AJAX
+    if ($request->ajax()) {
+        return view('partials.search-results', compact('products'));
+    }
+
+    return view('partials.search-results', compact('products', 'query'));   //make it proper to handle requests if it is not ajax request
+} 
+
 }
 

@@ -8,10 +8,15 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 
+// General Public Routes
+Route::get("/", [HomepageController::class, "index"])->name("home");
+Route::get('/shop', [ShopController::class, 'shop'])->name('shop');
+Route::get('/product-details/{id}', [ShopController::class, 'show'])->name('product.details');
+
 // Guest User Routes
 Route::middleware("guest:customer")->group(function () {
-    Route::get("login", [LoginController::class, "index"])->name("customer.login");
-    Route::post("login", [LoginController::class, "authenticate"])->name("customer.authenticate");
+    Route::get("/login", [LoginController::class, "index"])->name("customer.login");
+    Route::post("/login", [LoginController::class, "authenticate"])->name("customer.authenticate");
 
     // Register route for customers/guest users
     Route::get("/register", [RegisterController::class, "index"])->name("register");
@@ -23,29 +28,28 @@ Route::middleware("auth:customer")->group(function () {
     Route::post("logout", [LoginController::class, "logout"])->name("customer.logout");
 });
 
-// General Public Routes
-Route::get("/", [HomepageController::class, "index"])->name("home");
-Route::get('/shop', [ShopController::class, 'shop'])->name('shop');
-Route::get('/product-details/{id}', [ShopController::class, 'show'])->name('product.details');
+
 
 // Cart Routes
-Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 
-Route::middleware("auth:customer")->group(function () {
-    Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
-    Route::post('/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
-    Route::post('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clear');
-    Route::post('/cart/update', [CartController::class, 'updateCart'])->name('cart.update');
+Route::prefix('cart')->group(function(){
+
+    Route::get('/', [CartController::class, 'index'])->name('cart.index');
+    
+    Route::middleware("auth:customer")->group(function () {
+        Route::post('/add', [CartController::class, 'addToCart'])->name('cart.add');
+        Route::post('/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+        Route::post('/clear', [CartController::class, 'clearCart'])->name('cart.clear');
+        Route::post('/update', [CartController::class, 'updateCart'])->name('cart.update');
+    });
 });
 
-// Checkout Route
-// Route::get('/checkout', function () {
-//     return view('checkout');
-// });
 
-
+// checkout routes:
 Route::middleware("auth:customer")->group(function(){
     Route::get('/checkout',[OrderController::class,'index'])->name('checkout.index');
     Route::post('/placeorder',[OrderController::class,'placeOrder'])->name('place.order');
     Route::get('/orderplaced/{id}',[OrderController::class,'orderPlaced'])->name('order.success');
 });
+
+Route::get('/search', [HomepageController::class, 'search'])->name('search');

@@ -6,10 +6,21 @@
     </div>
 
     <!-- Search Bar -->
-    <div class="relative w-1/3">
-        <input type="text" placeholder="Search for products..." class="w-full py-2 px-4 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400">
-        <i class="uil uil-search absolute right-4 top-3 text-gray-500 cursor-pointer"></i>
-    </div>
+
+<form id="searchForm" class="relative w-1/3">
+    <input 
+        type="text" 
+        name="query" 
+        id="searchInput" 
+        class="w-full py-2 px-4 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 pr-10"
+        placeholder="Search for products..." 
+        autocomplete="off"
+    >
+    <i class="uil uil-search absolute right-4 top-3 text-gray-500 pointer-events-none"></i>
+
+    <!-- Search Results Modal -->
+    <div id="searchResultsModal" class="absolute bg-white shadow-lg rounded mt-1 w-full z-50 hidden max-h-80 overflow-y-auto"></div>
+</form>
 
     <ul class="flex space-x-6 text-gray-600 items-center">
         <li><a href="{{ route('home') }}" class="hover:text-black">Home</a></li>
@@ -46,3 +57,45 @@
         @endif
     </ul>
 </nav>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("searchInput");
+        const searchResultsModal = document.getElementById("searchResultsModal");
+    
+        let debounceTimeout;
+    
+        searchInput.addEventListener("input", function () {
+            const query = this.value.trim();
+    
+            clearTimeout(debounceTimeout);
+    
+            if (query.length < 2) {
+                searchResultsModal.classList.add("hidden");
+                searchResultsModal.innerHTML = "";
+                return;
+            }
+    
+            debounceTimeout = setTimeout(() => {
+                fetch(`/search?query=${encodeURIComponent(query)}`)
+                    .then(response => response.text())
+                    .then(html => {
+                        searchResultsModal.innerHTML = html;
+                        searchResultsModal.classList.remove("hidden");
+                    })
+                    .catch(err => {
+                        searchResultsModal.innerHTML = '<div class="p-2 text-red-500">Error fetching results.</div>';
+                        searchResultsModal.classList.remove("hidden");
+                    });
+            }, 300); // debounce delay
+        });
+    
+        // Hide modal when clicking outside
+        document.addEventListener("click", function (e) {
+            if (!searchInput.contains(e.target) && !searchResultsModal.contains(e.target)) {
+                searchResultsModal.classList.add("hidden");
+            }
+        });
+    });
+    </script>
+    
