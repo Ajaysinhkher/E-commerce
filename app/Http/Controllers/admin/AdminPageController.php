@@ -26,7 +26,7 @@ class AdminPageController extends Controller
     {
 
         // dd($request->content);
-        // Validate the request sing PageRequest class
+        // Validate the request using PageRequest class
     
         // Generate a unique slug from the name
         $slug = Str::slug($request->name);

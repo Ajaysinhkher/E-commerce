@@ -29,7 +29,7 @@ class DashboardController extends Controller
         // Latest orders (e.g., last 5 orders)
         $latestOrders = Order::with('user')
             ->latest()
-            ->take(5)
+            ->take(3)
             ->get();
 
         // Data for the chart (order status distribution)

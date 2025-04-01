@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\AdminCustomerController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminPageController;
+use  App\Http\Controllers\Admin\StaticpageController;
 
 
 Route::prefix("admin")->group(function () {
@@ -91,6 +92,16 @@ Route::prefix('orders')->group(function () {
         Route::get('/edit/{id}',[AdminPageController::class,'edit'])->name('admin.pages.edit');
         Route::put('/update/{id}',[AdminPageController::class,'update'])->name('admin.pages.update');
         Route::delete('/{id}',[AdminPageController::class,'destroy'])->name('admin.pages.destroy');
+    });
+
+    Route::prefix('staticPages')->group(function () {
+
+        Route::get('/', [StaticpageController::class, 'index'])->name('admin.staticpages.index');
+        Route::get('/create', [StaticpageController::class, 'create'])->name('admin.staticpages.create');
+        Route::post('/store',[StaticpageController::class, 'store'])->name('admin.staticpages.store');
+        Route::get('/edit/{id}',[StaticpageController::class,'edit'])->name('admin.staticpages.edit');
+        Route::put('/update/{id}',[StaticpageController::class,'update'])->name('admin.staticpages.update');
+        Route::delete('/{id}',[StaticpageController::class,'destroy'])->name('admin.staticpages.destroy');
     });
 
     });

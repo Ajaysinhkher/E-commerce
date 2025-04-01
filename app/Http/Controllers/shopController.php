@@ -11,12 +11,15 @@ use Exception;
 class ShopController extends Controller
 {
     public function shop(Request $request)
+    
     {
         try {
+            // dd($request->all());
             $categories = Category::where('status','active')->get();
 
             // get selected category from query parameter:
-            $categorySlug = $request->query('category');
+            $categorySlug = $request->query('category')? explode(',', $request->query('category')) : [];
+            // dd($categorySlug);
            
             
             // start the product query:
@@ -25,14 +28,32 @@ class ShopController extends Controller
              // Apply category filter if a category is selected
              if ($categorySlug) {
                 $query->whereHas('categories', function ($q) use ($categorySlug) {
-                    $q->where('slug', $categorySlug);
+                    $q->whereIn('slug', $categorySlug);
+                    // dd($q);
                 });
             }
+
+
+         
 
           // Fetch products with pagination
             $products = $query->paginate(10);
             // dd($products->toArray());
+            
 
+        // Check if the request is expecting JSON
+        if ($request->expectsJson()) {
+            return response()->json([
+                'products' => view('partials.products', compact('products'))->render(),
+                'pagination' => view('partials.pagination', compact('products'))->render(),
+            ]);
+        }
+
+    
+
+            
+
+            // if no ajax request
             return view('shop', [
                 'categories' => $categories,
                 'products' => $products,

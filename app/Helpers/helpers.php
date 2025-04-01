@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Page;
+use App\Models\StaticPage;
 
 if (!function_exists('getPageContent')) {
     function getPageContent(string $slug, string $default = ''): string
@@ -9,3 +10,13 @@ if (!function_exists('getPageContent')) {
         return optional($page)->content ?? $default;
     }
 }
+
+
+if (!function_exists('getStaticPageContent')) {
+    function getStaticPageContent(string $slug, string $default = ''): string
+    {
+        $staticPage = StaticPage::where('slug', $slug)->first();
+        return optional($staticPage)->content ?? $default;
+    }
+}
+

@@ -53,3 +53,5 @@ Route::middleware("auth:customer")->group(function(){
 });
 
 Route::get('/search', [HomepageController::class, 'search'])->name('search');
+Route::get('/contact',[HomepageController::class,'contact'])->name('contact');
+Route::post('/contact/submit', [HomepageController::class, 'submitContactForm'])->name('contact.submit');

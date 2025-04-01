@@ -6,6 +6,8 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\QueryException;
+use App\Models\StaticPage;
+
 
 class HomepageController extends Controller
 {
@@ -54,6 +56,29 @@ class HomepageController extends Controller
 
     return view('partials.search-results', compact('products', 'query'));   //make it proper to handle requests if it is not ajax request
 } 
+
+public function contact()
+{
+    
+   return view('contact');
+}
+
+public function submitContactForm(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|max:255',
+        'message' => 'required|string|min:10',
+    ]);
+
+    // Send email or store message in the database
+    Mail::raw("Message from: {$request->name} ({$request->email})\n\n{$request->message}", function ($mail) use ($request) {
+        $mail->to('support@yourshopper.com')
+            ->subject('New Contact Form Submission');
+    });
+
+    return redirect()->back()->with('success', 'Your message has been sent successfully.');
+}
 
 }
 

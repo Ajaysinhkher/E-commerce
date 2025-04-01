@@ -7,7 +7,7 @@
 
     @vite(['resources/js/app.js', 'resources/css/app.css'])
     <script src="https://cdn.tailwindcss.com"></script>
-    {{-- <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"> --}}
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 
 </head>
 <body class="bg-gray-100">
@@ -56,6 +56,12 @@
                     <a href="{{ route('admin.pages.index') }}" class="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded">
                         <i class="uil uil-star text-lg"></i>
                         <span>Pages</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.staticpages.index') }}" class="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded">
+                        <i class="uil uil-file-alt text-lg"></i>
+                        <span>Static Pages</span>
                     </a>
                 </li>
             </ul>

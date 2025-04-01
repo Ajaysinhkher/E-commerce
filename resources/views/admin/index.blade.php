@@ -71,52 +71,54 @@
         </div>
 
         <!-- Latest Orders Table -->
-        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
-            <h3 class="text-xl font-semibold text-gray-700 mb-4">Latest Orders</h3>
-            <div class="overflow-x-auto">
-                <table class="w-full border-collapse">
-                    <thead>
-                        <tr class="bg-gray-700 text-white">
-                            <th class="p-3 border text-left">Order ID</th>
-                            <th class="p-3 border text-left">Customer</th>
-                            <th class="p-3 border text-left">Date</th>
-                            <th class="p-3 border text-right">Total</th>
-                            <th class="p-3 border text-center">Status</th>
-                            <th class="p-3 border text-center">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($latestOrders as $order)
-                            <tr class="border-b hover:bg-gray-100 transition">
-                                <td class="p-3 border">{{ $order->id }}</td>
-                                <td class="p-3 border">{{ $order->user->user_name ?? 'Guest' }}</td>
-                                <td class="p-3 border">{{ $order->created_at->format('d M, Y h:i A') }}</td>
-                                <td class="p-3 border text-right">₹ {{ number_format($order->total, 2) }}</td>
-                                <td class="p-3 border text-center">
-                                    <span class="px-3 py-1 text-sm font-semibold rounded-md
-                                        @if ($order->status === 'pending') bg-yellow-200 text-yellow-800 
-                                        @elseif ($order->status === 'shipped') bg-purple-200 text-purple-800
-                                        @elseif ($order->status === 'delivered') bg-teal-200 text-teal-800
-                                        @elseif ($order->status === 'canceled') bg-red-200 text-red-800
-                                        @else bg-gray-200 text-gray-800
-                                        @endif">
-                                        {{ ucfirst($order->status) }}
-                                    </span>
-                                </td>
-                                <td class="p-3 border text-center">
-                                    <a href="{{ route('admin.orders.show', $order->id) }}" 
-                                       class="text-blue-600 hover:underline font-medium">View</a>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="p-3 border text-center text-gray-500">No recent orders found.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
+       <!-- Latest Orders Table -->
+<div class="bg-white shadow-md rounded-lg p-6 mb-6">
+    <h3 class="text-xl font-semibold text-gray-700 mb-4">Latest Orders</h3>
+    <div class="overflow-y-auto max-h-96"> <!-- Added max-height and overflow -->
+        <table class="w-full border-collapse">
+            <thead>
+                <tr class="bg-gray-700 text-white">
+                    <th class="p-3 border text-left">Order ID</th>
+                    <th class="p-3 border text-left">Customer</th>
+                    <th class="p-3 border text-left">Date</th>
+                    <th class="p-3 border text-right">Total</th>
+                    <th class="p-3 border text-center">Status</th>
+                    <th class="p-3 border text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($latestOrders as $order)
+                    <tr class="border-b hover:bg-gray-100 transition">
+                        <td class="p-3 border">{{ $order->id }}</td>
+                        <td class="p-3 border">{{ $order->user->user_name ?? 'Guest' }}</td>
+                        <td class="p-3 border">{{ $order->created_at->format('d M, Y h:i A') }}</td>
+                        <td class="p-3 border text-right">₹ {{ number_format($order->total, 2) }}</td>
+                        <td class="p-3 border text-center">
+                            <span class="px-3 py-1 text-sm font-semibold rounded-md
+                                @if ($order->status === 'pending') bg-yellow-200 text-yellow-800 
+                                @elseif ($order->status === 'shipped') bg-purple-200 text-purple-800
+                                @elseif ($order->status === 'delivered') bg-teal-200 text-teal-800
+                                @elseif ($order->status === 'canceled') bg-red-200 text-red-800
+                                @else bg-gray-200 text-gray-800
+                                @endif">
+                                {{ ucfirst($order->status) }}
+                            </span>
+                        </td>
+                        <td class="p-3 border text-center">
+                            <a href="{{ route('admin.orders.show', $order->id) }}" 
+                               class="text-blue-600 hover:underline font-medium">View</a>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" class="p-3 border text-center text-gray-500">No recent orders found.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
+
 
         
 @endsection

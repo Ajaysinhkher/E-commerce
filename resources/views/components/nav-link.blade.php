@@ -25,7 +25,7 @@
     <ul class="flex space-x-6 text-gray-600 items-center">
         <li><a href="{{ route('home') }}" class="hover:text-black">Home</a></li>
         <li><a href="{{ route('shop') }}" class="hover:text-black">Shop</a></li>
-        <li><a href="#" class="hover:text-black">Contact</a></li>
+        <li><a href="{{ route('contact') }}" class="hover:text-black">Contact</a></li>
 
         <!-- Wishlist and Cart -->
         <li class="relative">
