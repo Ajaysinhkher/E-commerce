@@ -43,6 +43,12 @@ Route::middleware("auth:admin")->group(function () {
     
         // delete-product routes:
         Route::delete('/{id}',[AdminProductController::class,'destroy'])->name('admin.products.delete');
+
+        // soft delete routes:
+        Route::get('/deleted', [AdminProductController::class, 'deletedProducts'])->name('admin.products.deleted');
+        Route::patch('/restore/{id}', [AdminProductController::class, 'restore']) ->name('admin.products.restore');
+        Route::delete('/force-delete/{id}', [AdminProductController::class, 'forceDelete'])->name('admin.products.forceDelete');
+
     });
 
 
@@ -59,6 +65,11 @@ Route::middleware("auth:admin")->group(function () {
         Route::put('/update/{id}',[AdminCategoryController::class,'update'])->name('admin.categories.update');
         // delete category:
         Route::delete('/{id}',[AdminCategoryController::class,'destroy'])->name('admin.categories.delete');
+
+        // soft delete routes
+        Route::get('/deleted', [AdminCategoryController::class, 'deletedCategories'])->name('admin.categories.deleted');
+        Route::patch('/restore/{id}', [AdminCategoryController::class, 'restore']) ->name('admin.categories.restore');
+        Route::delete('/force-delete/{id}', [AdminCategoryController::class, 'forceDelete'])->name('admin.categories.forceDelete');
     });
 
   

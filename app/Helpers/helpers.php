@@ -12,11 +12,11 @@ if (!function_exists('getPageContent')) {
 }
 
 
-if (!function_exists('getStaticPageContent')) {
-    function getStaticPageContent(string $slug, string $default = ''): string
-    {
-        $staticPage = StaticPage::where('slug', $slug)->first();
-        return optional($staticPage)->content ?? $default;
-    }
-}
+// if (!function_exists('getStaticPageContent')) {
+//     function getStaticPageContent(string $slug, string $default = ''): string
+//     {
+//         $staticPage = StaticPage::where('slug', $slug)->first();
+//         return optional($staticPage)->content ?? $default;
+//     }
+// }
 

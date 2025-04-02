@@ -6,30 +6,30 @@
     </div>
 
     <!-- Search Bar -->
+    <form id="searchForm" class="relative w-1/3">
+        <input 
+            type="text" 
+            name="query" 
+            id="searchInput" 
+            class="w-full py-2 px-4 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 pr-10"
+            placeholder="Search for products..." 
+            autocomplete="off"
+        >
+        <i class="uil uil-search absolute right-4 top-3 text-gray-500 pointer-events-none"></i>
 
-<form id="searchForm" class="relative w-1/3">
-    <input 
-        type="text" 
-        name="query" 
-        id="searchInput" 
-        class="w-full py-2 px-4 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 pr-10"
-        placeholder="Search for products..." 
-        autocomplete="off"
-    >
-    <i class="uil uil-search absolute right-4 top-3 text-gray-500 pointer-events-none"></i>
-
-    <!-- Search Results Modal -->
-    <div id="searchResultsModal" class="absolute bg-white shadow-lg rounded mt-1 w-full z-50 hidden max-h-80 overflow-y-auto"></div>
-</form>
+        <!-- Search Results Modal -->
+        <div id="searchResultsModal" class="absolute bg-white shadow-lg rounded mt-1 w-full z-50 hidden max-h-80 overflow-y-auto"></div>
+    </form>
 
     <ul class="flex space-x-6 text-gray-600 items-center">
         <li><a href="{{ route('home') }}" class="hover:text-black">Home</a></li>
         <li><a href="{{ route('shop') }}" class="hover:text-black">Shop</a></li>
-        <li><a href="{{ route('contact') }}" class="hover:text-black">Contact</a></li>
+        <li><a href="{{ route('contact','contact') }}" class="hover:text-black">Contact</a></li>    
 
         <!-- Wishlist and Cart -->
         <li class="relative">
-            <i class="uil uil-heart text-gray-600 text-xl cursor-pointer"></i>
+            <!-- Commented out Wishlist -->
+            <!-- <i class="uil uil-heart text-gray-600 text-xl cursor-pointer"></i> -->
 
             <a href="{{ route('cart.index') }}" class="relative">
                 <i class="uil uil-shopping-cart text-gray-600 text-2xl cursor-pointer"></i>
@@ -37,15 +37,17 @@
                 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center" 
                 style="display: {{ session('cart') ? 'inline-block' : 'none' }};">
                 {{ array_sum(array_column(session('cart', []), 'quantity')) }}
-
-                {{-- array_column(session('cart',[]),'quantity') gets the 'quantity' value from the array stored in session and sum them up --}}
-            </span>
-                     
+                </span>
             </a>
         </li>
 
-        <!-- Toggle Login/Logout -->
+        <!-- Toggle Login/Logout and Profile -->
         @if(auth('customer')->check())
+        <li>
+            <a href="{{ route('user.profile') }}" class="flex items-center space-x-1 hover:text-black">
+                <i class="uil uil-user text-gray-600 text-xl"></i>
+            </a>
+        </li>
             <li>
                 <form method="POST" action="{{ route('customer.logout') }}">
                     @csrf
@@ -97,5 +99,4 @@
             }
         });
     });
-    </script>
-    
+</script>

@@ -1,14 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-
-   
-    <div class="prose max-w-full">
-      
-        {!! getStaticPageContent('contact', '<p>Default About Us content...</p>') !!}
-
+    <div class="container">
+        <h1>{{ $StaticPage->title }}</h1>
+        <div>{!! $StaticPage->content !!}</div>
     </div>
-
-    
-
 @endsection

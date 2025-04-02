@@ -119,4 +119,60 @@ class AdminCategoryController extends Controller
             return back()->with('error', 'Failed to delete category.');
         }
     }
+
+        // Display a list of soft-deleted categories.
+
+        public function deletedCategories()
+        {
+            try {
+                $deletedCategories = Category::onlyTrashed()->paginate(4);
+                // dd($deletedProducts);
+                return view('admin.categories.deleted', ['categories' => $deletedCategories]);
+    
+            } catch (\Exception $e) {
+                Log::error('AdminProductController@deletedProducts Error: ' . $e->getMessage());
+                return back()->with('error', 'Failed to load deleted products.');
+            }
+        }
+
+
+    // Restore a soft deleted category.
+    public function restore($id)
+    {
+        try {
+
+            $category = Category::withTrashed()->findOrFail($id);
+            $category->restore();
+
+            return redirect()->route('admin.categories.deleted')->with('success', 'category restored successfully.');
+            
+        } catch (\Exception $e) {
+            Log::error('AdminCategoryController@restore Error: ' . $e->getMessage());
+            return back()->with('error', 'Failed to restore category.');
+        }
+    }
+
+    
+    // Permanently delete a soft-deleted product.
+    public function forceDelete($id)
+    {
+        try {
+            $category = Category::withTrashed()->findOrFail($id);
+            
+            // Delete product image from storage if exists
+            // if ($product->image) {
+            //     Storage::delete('public/' . $product->image);
+            // }
+
+            $category->forceDelete(); // Permanently delete
+
+            return redirect()->route('admin.categories.deleted')->with('success', 'Product permanently deleted.');
+            
+        } catch (\Exception $e) {
+            Log::error('AdminCategoryController@forceDelete Error: ' . $e->getMessage());
+            return back()->with('error', 'Failed to delete category permanently.');
+        }
+    }
+
+
 }

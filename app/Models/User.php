@@ -52,7 +52,7 @@ class User extends Authenticatable
         ];
     }
 
-    // get the orders for teh user:
+    // get the orders for the user:
     public function orders()
     {
         return $this->hasMany(Order::class);

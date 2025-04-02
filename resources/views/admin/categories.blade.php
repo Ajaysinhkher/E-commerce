@@ -4,7 +4,13 @@
 <div class="p-6 bg-white rounded-lg shadow-md">
     <div class="flex justify-between items-center mb-4">
         <h2 class="text-2xl font-bold">Categories</h2>
-        <a href="{{ route('admin.categories.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">+ Add Category</a>
+        <div class="flex space-x-2">
+
+            <a href="{{ route('admin.categories.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">+ Add Category</a>
+            <a href="{{ route('admin.categories.deleted') }}" class="bg-red-500 text-white px-4 py-2 rounded">🗑  Deleted Categories</a>
+
+        </div>
+
     </div>
 
     <table class="w-full border-collapse border border-gray-300">

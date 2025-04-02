@@ -160,4 +160,63 @@ class AdminProductController extends Controller
             return back()->with('error', 'Failed to delete product.');
         }
     }
+
+    // Display a list of soft-deleted products.
+
+    public function deletedProducts()
+    {
+        try {
+            $deletedProducts = Product::onlyTrashed()->paginate(4);
+            // dd($deletedProducts);
+            return view('admin.products.deleted', ['products' => $deletedProducts]);
+
+        } catch (\Exception $e) {
+            Log::error('AdminProductController@deletedProducts Error: ' . $e->getMessage());
+            return back()->with('error', 'Failed to load deleted products.');
+        }
+    }
+
+    
+    // Restore a soft deleted product.
+
+    public function restore($id)
+    {
+        try {
+
+            $product = Product::withTrashed()->findOrFail($id);
+            $product->restore();
+
+            return redirect()->route('admin.products.deleted')->with('success', 'Product restored successfully.');
+            
+        } catch (\Exception $e) {
+            Log::error('AdminProductController@restore Error: ' . $e->getMessage());
+            return back()->with('error', 'Failed to restore product.');
+        }
+    }
+
+    
+    // Permanently delete a soft-deleted product.
+    public function forceDelete($id)
+    {
+        try {
+            $product = Product::withTrashed()->findOrFail($id);
+            
+            // Delete product image from storage if exists
+            if ($product->image) {
+                Storage::delete('public/' . $product->image);
+            }
+
+            $product->forceDelete(); // Permanently delete
+
+            return redirect()->route('admin.products.deleted')->with('success', 'Product permanently deleted.');
+            
+        } catch (\Exception $e) {
+            Log::error('AdminProductController@forceDelete Error: ' . $e->getMessage());
+            return back()->with('error', 'Failed to delete product permanently.');
+        }
+    }
+
+
 }
+
+

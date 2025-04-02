@@ -4,7 +4,14 @@
 <div class="p-6 bg-white rounded-lg shadow-md">
     <div class="flex justify-between items-center mb-4">
         <h2 class="text-2xl font-bold">Products</h2>
-        <a href="{{ route('admin.products.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">+ Add Product</a>
+        <div class="flex space-x-2">
+            <a href="{{ route('admin.products.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">
+                + Add Product
+            </a>
+            <a href="{{ route('admin.products.deleted') }}" class="bg-red-500 text-white px-4 py-2 rounded">
+                🗑  Deleted Products
+            </a>
+        </div>
     </div>
 
     <table class="w-full border-collapse border border-gray-300">

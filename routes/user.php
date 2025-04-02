@@ -7,6 +7,7 @@ use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CustomerStaticPageController;
 
 // General Public Routes
 Route::get("/", [HomepageController::class, "index"])->name("home");
@@ -53,5 +54,8 @@ Route::middleware("auth:customer")->group(function(){
 });
 
 Route::get('/search', [HomepageController::class, 'search'])->name('search');
-Route::get('/contact',[HomepageController::class,'contact'])->name('contact');
-Route::post('/contact/submit', [HomepageController::class, 'submitContactForm'])->name('contact.submit');
+Route::get('/contact/{slug}',[CustomerStaticPageController::class,'show'])->name('contact');
+// Route::post('/contact/submit', [HomepageController::class, 'submitContactForm'])->name('contact.submit');
+
+Route::get('/profile',[HomePageController::class,'userProfile'])->name('user.profile');
+Route::get('/profile/edit',[HomePageController::class,'edituserProfile'])->name('user.edit-profile');
