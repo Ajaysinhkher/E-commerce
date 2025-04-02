@@ -15,7 +15,7 @@
             placeholder="Search for products..." 
             autocomplete="off"
         >
-        <i class="uil uil-search absolute right-4 top-3 text-gray-500 pointer-events-none"></i>
+            <i class="uil uil-search absolute right-4 top-3 text-gray-500 pointer-events-none"></i>
 
         <!-- Search Results Modal -->
         <div id="searchResultsModal" class="absolute bg-white shadow-lg rounded mt-1 w-full z-50 hidden max-h-80 overflow-y-auto"></div>

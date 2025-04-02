@@ -1,10 +1,13 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\Role;    
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Log;
+
 
 class Admin extends Authenticatable
 {
@@ -15,6 +18,7 @@ class Admin extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'role_id',
         'password',
         'status', // Include status in fillable
     ];
@@ -27,4 +31,26 @@ class Admin extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
+
+    public function hasPermission($permission) {
+        Log::info("Checking permission '{$permission}' for admin ID: {$this->id}");
+    
+        if ($this->isSuperAdmin()) {
+            Log::info("Admin ID: {$this->id} is a Super Admin. Access granted.");
+            return true;
+        }
+    
+        $hasPermission = $this->role()->whereHas("permissions", function ($query) use ($permission) {
+            $query->where("slug", $permission);
+        })->exists();
+    
+        Log::info("Permission '{$permission}' check for admin ID: {$this->id} returned: " . ($hasPermission ? 'Allowed' : 'Denied'));
+    
+        return $hasPermission;
+    }
 }

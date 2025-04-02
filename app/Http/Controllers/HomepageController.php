@@ -58,14 +58,6 @@ class HomepageController extends Controller
     return view('partials.search-results', compact('products', 'query'));   //make it proper to handle requests if it is not ajax request
     } 
 
-
-    // public function contact()
-    // {
-        
-    //      return view('contact');
-    // }
-
-
     public function submitContactForm(Request $request)
     {
         $request->validate([

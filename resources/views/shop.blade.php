@@ -35,7 +35,7 @@
 
     <!-- Pagination (Preserve category filter) -->
     <div id="pagination" class="mt-6 flex justify-center">
-        {{ $products->appends(['category' => request('category')])->links() }}
+        {{ $products->links('components.pagination') }}
     </div>
 </main>
 
@@ -53,28 +53,9 @@
         selectAllCheckbox.indeterminate = !allChecked && Array.from(checkboxes).some(checkbox => checkbox.checked);
     }
 
-    // Handle category checkbox change
-    document.querySelectorAll('.category-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            if (this.id === 'select-all') {
-                // If "Select All" is changed, select/deselect all other checkboxes
-                document.querySelectorAll('.category-checkbox:not(#select-all)').forEach(catCheckbox => {
-                    catCheckbox.checked = this.checked;
-                });
-            }
-
-            // Get selected categories
-            let selectedCategories = Array.from(document.querySelectorAll('.category-checkbox:checked:not(#select-all)')).map(cb => cb.value);
-
-            // Send AJAX request to fetch filtered products
-            fetchProducts(selectedCategories);
-            updateSelectAllCheckboxState();
-        });
-    });
-
-    // Function to fetch products based on selected categories
-    function fetchProducts(selectedCategories) {
-        let url = new URL(window.location.href);
+    // Function to fetch products based on selected categories and pagination
+    function fetchProducts(selectedCategories, pageUrl = null) {
+        let url = pageUrl ? new URL(pageUrl) : new URL(window.location.href);
         url.searchParams.set('category', selectedCategories.join(','));
         history.pushState(null, '', url);
 
@@ -95,6 +76,32 @@
         })
         .catch(error => console.error('Error fetching products:', error));
     }
+
+    // Handle category checkbox change
+    document.querySelectorAll('.category-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            if (this.id === 'select-all') {
+                // If "Select All" is changed, select/deselect all other checkboxes
+                document.querySelectorAll('.category-checkbox:not(#select-all)').forEach(catCheckbox => {
+                    catCheckbox.checked = this.checked;
+                });
+            }
+
+            let selectedCategories = Array.from(document.querySelectorAll('.category-checkbox:checked:not(#select-all)')).map(cb => cb.value);
+            fetchProducts(selectedCategories);
+            updateSelectAllCheckboxState();
+        });
+    });
+
+    // AJAX Pagination Event Listener
+    document.addEventListener('click', function (e) {
+        if (e.target.closest('#pagination a')) {
+            e.preventDefault(); // Prevent default page reload
+            let pageUrl = e.target.closest('#pagination a').getAttribute('href'); // Get page URL
+            let selectedCategories = Array.from(document.querySelectorAll('.category-checkbox:checked:not(#select-all)')).map(cb => cb.value);
+            fetchProducts(selectedCategories, pageUrl);
+        }
+    });
 
     // Initial state update for "Select All" checkbox based on pre-selected categories
     updateSelectAllCheckboxState();

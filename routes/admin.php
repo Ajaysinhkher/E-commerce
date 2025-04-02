@@ -13,7 +13,9 @@ use App\Http\Controllers\Admin\AdminCustomerController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminPageController;
-use  App\Http\Controllers\Admin\StaticpageController;
+use App\Http\Controllers\Admin\StaticpageController;
+use App\Http\Controllers\Admin\AdminRoleController;
+use App\Http\Controllers\Admin\AddnewAdminController;
 
 
 Route::prefix("admin")->group(function () {
@@ -32,22 +34,22 @@ Route::middleware("auth:admin")->group(function () {
     // Admin dashboard product management routes:
     Route::prefix('products')->group(function(){
 
-        Route::get('/',[AdminProductController::class,'index'])->name('admin.products');
-        Route::get('/create',[AdminProductController::class,'create'])->name('admin.products.create');
-        Route::post('/store',[AdminProductController::class,'store'])->name('admin.products.store');
+        Route::get('/',[AdminProductController::class,'index'])->name('admin.products')->can('manage_products');
+        Route::get('/create',[AdminProductController::class,'create'])->name('admin.products.create')->can('manage_products');
+        Route::post('/store',[AdminProductController::class,'store'])->name('admin.products.store')->can('manage_products');
     
         // edit-product routes
-        Route::get('/edit/{id}',[AdminProductController::class,'edit'])->name('admin.products.edit');
+        Route::get('/edit/{id}',[AdminProductController::class,'edit'])->name('admin.products.edit')->can('manage_products');
         // dd(route('admin.products.update', ['product' => 1]));
-        Route::put('/update/{id}',[AdminProductController::class,'update'])->name('admin.products.update');
+        Route::put('/update/{id}',[AdminProductController::class,'update'])->name('admin.products.update')->can('manage_products');
     
         // delete-product routes:
-        Route::delete('/{id}',[AdminProductController::class,'destroy'])->name('admin.products.delete');
+        Route::delete('/{id}',[AdminProductController::class,'destroy'])->name('admin.products.delete')->can('manage_products');
 
         // soft delete routes:
-        Route::get('/deleted', [AdminProductController::class, 'deletedProducts'])->name('admin.products.deleted');
-        Route::patch('/restore/{id}', [AdminProductController::class, 'restore']) ->name('admin.products.restore');
-        Route::delete('/force-delete/{id}', [AdminProductController::class, 'forceDelete'])->name('admin.products.forceDelete');
+        Route::get('/deleted', [AdminProductController::class, 'deletedProducts'])->name('admin.products.deleted')->can('manage_products');
+        Route::patch('/restore/{id}', [AdminProductController::class, 'restore']) ->name('admin.products.restore')->can('manage_products');
+        Route::delete('/force-delete/{id}', [AdminProductController::class, 'forceDelete'])->name('admin.products.forceDelete')->can('manage_products');
 
     });
 
@@ -113,6 +115,20 @@ Route::prefix('orders')->group(function () {
         Route::get('/edit/{id}',[StaticpageController::class,'edit'])->name('admin.staticpages.edit');
         Route::put('/update/{id}',[StaticpageController::class,'update'])->name('admin.staticpages.update');
         Route::delete('/{id}',[StaticpageController::class,'destroy'])->name('admin.staticpages.destroy');
+    });
+
+    Route::get('/role',[AdminRoleController::class,'index'])->name('admin.roles.index');
+    Route::get('/role/create',[AdminRoleController::class,'create'])->name('admin.roles.create');
+    Route::post('/role/store',[AdminRoleController::class,'store'])->name('admin.roles.store');
+
+
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('/admins', [AddnewAdminController::class, 'index'])->name('admins.index');
+        Route::get('/admins/create', [AddnewAdminController::class, 'create'])->name('admins.create');
+        Route::post('/admins', [AddnewAdminController::class, 'store'])->name('admins.store');
+        Route::get('/admins/{admin}/edit', [AddnewAdminController::class, 'edit'])->name('admins.edit');
+        Route::put('/admins/{admin}', [AddnewAdminController::class, 'update'])->name('admins.update');
+        Route::delete('/admins/{admin}', [AddnewAdminController::class, 'destroy'])->name('admins.destroy');
     });
 
     });

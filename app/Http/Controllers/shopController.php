@@ -48,9 +48,6 @@ class ShopController extends Controller
                 'pagination' => view('partials.pagination', compact('products'))->render(),
             ]);
         }
-
-    
-
             
 
             // if no ajax request
