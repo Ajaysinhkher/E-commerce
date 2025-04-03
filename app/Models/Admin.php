@@ -37,8 +37,16 @@ class Admin extends Authenticatable
         return $this->belongsTo(Role::class, 'role_id');
     }
 
+
+    // super admin function
+    public function isSuperAdmin() {
+        // Assuming Super Admin has role_id = 1
+        return $this->role_id === 6;
+    }
+
+
     public function hasPermission($permission) {
-        Log::info("Checking permission '{$permission}' for admin ID: {$this->id}");
+        Log::info("Checking permission test for admin ID: {$this->id}");
     
         if ($this->isSuperAdmin()) {
             Log::info("Admin ID: {$this->id} is a Super Admin. Access granted.");
@@ -46,8 +54,11 @@ class Admin extends Authenticatable
         }
     
         $hasPermission = $this->role()->whereHas("permissions", function ($query) use ($permission) {
+            Log::info("inside haspermission");
             $query->where("slug", $permission);
         })->exists();
+
+        
     
         Log::info("Permission '{$permission}' check for admin ID: {$this->id} returned: " . ($hasPermission ? 'Allowed' : 'Denied'));
     

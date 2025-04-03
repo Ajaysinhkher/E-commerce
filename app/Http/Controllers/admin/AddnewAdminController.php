@@ -19,7 +19,6 @@ class AddnewAdminController extends Controller
 
         try {
             $admins = Admin::with('role')->get(); // Eager load role
- // Fetch only admin users
             // dd($admins);
             return view('admin.admins.index', compact('admins'));
 
@@ -66,4 +65,66 @@ class AddnewAdminController extends Controller
             return redirect()->back()->with('error', 'Something went wrong while creating the admin.');
         }
     }
+
+    // edit admin:
+    public function edit($id)
+    {
+        try {
+            $admin = Admin::findOrFail($id);
+            $roles = Role::all();
+            return view('admin.admins.edit', compact('admin', 'roles'));
+        } catch (\Exception $e) {
+            Log::error('Error fetching admin for edit: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong while fetching the admin.');
+        }
+    }
+
+    // update admin:
+    public function update(Request $request, $id)
+    {
+        try {
+            // Validate input
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:admins,email,' . $id,
+                'role_id' => 'required|exists:roles,id',
+                'password' => 'nullable|min:6|confirmed'
+            ]);
+
+            $admin = Admin::findOrFail($id);
+
+            // Update fields
+            $admin->name = $request->name;
+            $admin->email = $request->email;
+            $admin->role_id = $request->role_id;
+
+            if ($request->filled('password')) {
+                $admin->password = Hash::make($request->password);
+            }
+
+            $admin->save();
+
+            return redirect()->route('admin.admins.index')->with('success', 'Admin updated successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error updating admin: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong while updating the admin.');
+        }
+    }
+
+    // delete admin:
+    public function destroy($id)
+    {
+        try {
+            $admin = Admin::findOrFail($id);
+            $admin->delete();
+
+            return redirect()->route('admin.admins.index')->with('success', 'Admin deleted successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error deleting admin: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong while deleting the admin.');
+        }
+    }
+
+    
+
 }

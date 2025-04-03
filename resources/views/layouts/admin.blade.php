@@ -28,36 +28,51 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
+                @can('manage_products')
                 <li>
                     <a href="{{ route('admin.products') }}" class="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded">
                         <i class="uil uil-box text-lg"></i>
                         <span>Products</span>
                     </a>
                 </li>
+                @endcan
+                @can('manage_categories')
+               
                 <li>
                     <a href="{{ route('admin.categories') }}" class="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded">
                         <i class="uil uil-list-ul text-lg"></i>
                         <span>Categories</span>
                     </a>
                 </li>
+            @endcan
+            
+            @can('manage_customers')
                 <li>
                     <a href="{{ route('admin.customers') }}" class="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded">
                         <i class="uil uil-users-alt text-lg"></i>
                         <span>Customers</span>
                     </a>
                 </li>
+                @endcan
+                
+                @can('manage_orders')
                 <li>
                     <a href="{{ route('admin.orders.index') }}" class="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded">
                         <i class="uil uil-shopping-cart text-lg"></i>
                         <span>Orders</span>
                     </a>
                 </li>
+                @endcan
+
+                @can('manage_staticblocks')
                 <li>
                     <a href="{{ route('admin.pages.index') }}" class="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded">
                         <i class="uil uil-star text-lg"></i>
                         <span>Pages</span>
                     </a>
                 </li>
+                @endcan
+                
                 <li>
                     <a href="{{ route('admin.staticpages.index') }}" class="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded">
                         <i class="uil uil-file-alt text-lg"></i>

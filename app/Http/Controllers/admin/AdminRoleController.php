@@ -64,5 +64,63 @@ class AdminRoleController extends Controller
             return redirect()->back()->with('error', 'Something went wrong while creating the role.');
         }
     }
+
+    // edit role:
+    public function edit($id)
+    {
+        try {
+            $role = Role::with('permissions')->findOrFail($id);
+            $permissions = Permission::all();
+            return view('admin.roles.edit', compact('role', 'permissions'));
+        } catch (\Exception $e) {
+            Log::error('Error fetching role for editing: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong while fetching role details.');
+        }
+    }
+
+    // supdate role:
+    public function update(Request $request, $id)
+    {
+        try {
+            $role = Role::findOrFail($id);
+
+            $request->validate([
+                'name' => 'required|string|max:255|unique:roles,name,' . $id,
+                'permissions' => 'nullable|array',
+                'permissions.*' => 'exists:permissions,id'
+            ]);
+
+            $role->update([
+                'name' => $request->name,
+                'slug' => strtolower(str_replace(' ', '-', $request->name))
+            ]);
+
+            if ($request->has('permissions')) {
+                $role->permissions()->sync($request->permissions);
+            } else {
+                $role->permissions()->detach();
+            }
+
+            return redirect()->route('admin.roles.index')->with('success', 'Role updated successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error updating role: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong while updating the role.');
+        }
+    }
+
+    // delete role:
+    public function destroy($id)
+    {
+        try {
+            $role = Role::findOrFail($id);
+            $role->permissions()->detach();
+            $role->delete();
+
+            return redirect()->route('admin.roles.index')->with('success', 'Role deleted successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error deleting role: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong while deleting the role.');
+        }
+    }
     
 }

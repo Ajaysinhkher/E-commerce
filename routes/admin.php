@@ -11,6 +11,9 @@ use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminCustomerController;
 use App\Http\Controllers\CartController;
+
+
+
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminPageController;
 use App\Http\Controllers\Admin\StaticpageController;
@@ -58,7 +61,7 @@ Route::middleware("auth:admin")->group(function () {
     Route::prefix("categories")->group(function(){
 
         // categories management routes:
-        Route::get('/', [AdminCategoryController::class,'index'])->name("admin.categories"); //convert it to index path
+        Route::get('/', [AdminCategoryController::class,'index'])->name("admin.categories")->can('manage_categories'); //convert it to index path
         Route::get('/create',[AdminCategoryController::class,'create'])->name('admin.categories.create');
         Route::post('/store',[AdminCategoryController::class,'store'])->name('admin.categories.store');
     
@@ -79,7 +82,7 @@ Route::middleware("auth:admin")->group(function () {
     // customer routes
     Route::prefix('customers')->group(function () {
         // manage customers at admin side:
-        Route::get("/", [AdminCustomerController::class, 'index'])->name('admin.customers');
+        Route::get("/", [AdminCustomerController::class, 'index'])->name('admin.customers')->can('manage_customers');
         // edit customer:
         Route::get('/edit/{id}',[AdminCustomerController::class,'edit'])->name('admin.customers.edit');
         Route::put('/update/{id}',[AdminCustomerController::class,'update'])->name('admin.customers.update');
@@ -90,7 +93,7 @@ Route::middleware("auth:admin")->group(function () {
 
 Route::prefix('orders')->group(function () {
 
-    Route::get("/",[AdminOrderController::class,'index'])->name("admin.orders.index");
+    Route::get("/",[AdminOrderController::class,'index'])->name("admin.orders.index")->can('manage_orders');
     Route::get("/{id}",[AdminOrderController::class,'show'])->name("admin.orders.show");
     Route::put("/update/{id}",[AdminOrderController::class,'update'])->name("admin.order.update");
 });
@@ -99,7 +102,7 @@ Route::prefix('orders')->group(function () {
 
     Route::prefix('pages')->group(function () {
 
-        Route::get('/', [AdminPageController::class, 'index'])->name('admin.pages.index');
+        Route::get('/', [AdminPageController::class, 'index'])->name('admin.pages.index')->can('manage_staticblocks');
         Route::get('/create', [AdminPageController::class, 'create'])->name('admin.pages.create');
         Route::post('/store',[AdminPageController::class, 'store'])->name('admin.pages.store');
         Route::get('/edit/{id}',[AdminPageController::class,'edit'])->name('admin.pages.edit');
@@ -120,16 +123,19 @@ Route::prefix('orders')->group(function () {
     Route::get('/role',[AdminRoleController::class,'index'])->name('admin.roles.index');
     Route::get('/role/create',[AdminRoleController::class,'create'])->name('admin.roles.create');
     Route::post('/role/store',[AdminRoleController::class,'store'])->name('admin.roles.store');
-
+    Route::get('/role/edit/{id}',[AdminRoleController::class,'edit'])->name('admin.roles.edit');
+    Route::put('/role/update/{id}',[AdminRoleController::class,'update'])->name('admin.roles.update');
+    Route::delete('/role/{id}',[AdminRoleController::class,'destroy'])->name('admin.roles.destroy');
 
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/admins', [AddnewAdminController::class, 'index'])->name('admins.index');
         Route::get('/admins/create', [AddnewAdminController::class, 'create'])->name('admins.create');
         Route::post('/admins', [AddnewAdminController::class, 'store'])->name('admins.store');
-        Route::get('/admins/{admin}/edit', [AddnewAdminController::class, 'edit'])->name('admins.edit');
-        Route::put('/admins/{admin}', [AddnewAdminController::class, 'update'])->name('admins.update');
+        Route::get('/admins/edit/{id}', [AddnewAdminController::class, 'edit'])->name('admins.edit');
+        Route::put('/admins/update/{id}', [AddnewAdminController::class, 'update'])->name('admins.update');
         Route::delete('/admins/{admin}', [AddnewAdminController::class, 'destroy'])->name('admins.destroy');
     });
+    
 
     });
 });
