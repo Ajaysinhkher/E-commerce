@@ -73,24 +73,32 @@
                 </li>
                 @endcan
                 
+                @can('manage_staticpages')
                 <li>
                     <a href="{{ route('admin.staticpages.index') }}" class="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded">
                         <i class="uil uil-file-alt text-lg"></i>
                         <span>Static Pages</span>
                     </a>
                 </li>
+                @endcan
+
+                @can('manage_admins')
                 <li>
                     <a href="{{ route('admin.admins.index') }}" class="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded">
                         <i class="uil uil-user text-lg"></i>
                         <span>Admins</span>
                     </a>
                 </li>
+                @endcan
+
+                @can('manage_roles')
                 <li>
                     <a href="{{ route('admin.roles.index') }}" class="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded">
                         <i class="uil uil-copy-alt text-lg"></i>
                         <span>Roles</span>
                     </a>
                 </li>
+                @endcan
             </ul>
 
             <!-- Logout -->

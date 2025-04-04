@@ -4,7 +4,7 @@
 <div class="max-w-lg mx-auto bg-white shadow-md rounded-lg p-6">
     <h2 class="text-xl font-semibold mb-4">Edit Admin</h2>
 
-    <form action="{{ route('admin.admins.update', $admin->id) }}" method="POST" class="space-y-4">
+    <form action="{{ route('admin.admins.update', ['id'=>$admin->id]) }}" method="POST" class="space-y-4">
         @csrf
         @method('PUT')
 

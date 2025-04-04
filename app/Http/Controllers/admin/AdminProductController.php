@@ -69,7 +69,7 @@ class AdminProductController extends Controller
                 'image' => $imagePath,
             ]);
 
-            // Attach categories
+            // Attach categories:attach()-> adds new relationships while keeping the older one as it is.
             $product->categories()->attach($request->categories);
 
             return redirect()->route('admin.products')->with('success', 'Product added successfully.');
@@ -134,7 +134,7 @@ class AdminProductController extends Controller
                 'image' => $product->image,
             ]);
 
-            // Sync categories
+            // Sync categories -->sync() will remove the older relationships and provide stores nw relationships
             $product->categories()->sync($request->categories);
 
             return redirect()->route('admin.products')->with('success', 'Product updated successfully.');
@@ -215,8 +215,8 @@ class AdminProductController extends Controller
             return back()->with('error', 'Failed to delete product permanently.');
         }
     }
-
-
 }
+
+
 
 

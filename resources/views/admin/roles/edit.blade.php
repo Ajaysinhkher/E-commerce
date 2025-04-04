@@ -4,7 +4,7 @@
 <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow">
     <h2 class="text-2xl font-semibold mb-4">Edit Role</h2>
 
-    <form action="{{ route('admin.roles.update', $role->id) }}" method="POST">
+    <form action="{{ route('admin.roles.update', ['id' => $role->id]) }}" method="POST">
         @csrf
         @method('PUT')
 
@@ -12,6 +12,15 @@
             <label class="block text-gray-700 font-medium">Role Name:</label>
             <input type="text" name="name" value="{{ old('name', $role->name) }}" 
                 class="w-full p-2 border border-gray-300 rounded" required>
+        </div>
+
+        {{-- Super Admin Checkbox --}}
+        <div class="mb-4">
+            <label class="flex items-center space-x-2">
+                <input type="checkbox" name="is_super_admin" value="yes"
+                    {{ $role->is_super_admin === 'yes' ? 'checked' : '' }}>
+                <span class="text-gray-700 font-medium">Is Super Admin</span>
+            </label>
         </div>
 
         <div class="mb-4">

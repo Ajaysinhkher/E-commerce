@@ -17,6 +17,14 @@
                 <input type="text" name="name" id="name" class="w-full p-2 border border-gray-300 rounded mt-1">
             </div>
 
+            {{-- is s+super admin cheeck--}}
+            <div class="mb-4">
+                <label class="flex items-center">
+                    <input type="checkbox" name="is_super_admin" value="yes" class="mr-2">
+                    <span class="font-medium text-gray-700">Is Super Admin</span>
+                </label>
+            </div>
+
             <div class="mb-4">
                 <label class="block font-medium text-gray-700">Permissions</label>
                 <div class="grid grid-cols-3 gap-2 mt-2">

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\admin;
-
+use App\Http\Requests\AddRoleRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Role;
@@ -37,24 +37,29 @@ class AdminRoleController extends Controller
     }
     }
 
-    public function store(Request $request)
+    public function store(AddRoleRequest $request)
     {
+
+
         try {
-            // Validate the request
-            $request->validate([
-                'name' => 'required|string|max:255|unique:roles,name',
-                'permissions' => 'nullable|array',
-                'permissions.*' => 'exists:permissions,id'
-            ]);
-    
+            // Validate the request using AddRoleRequest class
+
             // Create a new role
             $role = Role::create([
                 'name' => $request->name,
-                'slug' => strtolower(str_replace(' ', '-', $request->name))
+                'slug' => strtolower(str_replace(' ', '-', $request->name)),
+                'is_super_admin' => $request->has('is_super_admin') ? 'yes' : 'no',
             ]);
-    
-            // Attach selected permissions (ensure the relationship is defined in Role model)
-            if ($request->has('permissions')) {
+
+            // dd($role);
+
+            // If super admin, assign all permissions
+            if ($role->is_super_admin === 'yes') {
+                // dd($role->is_super_admin);
+                $allPermissions = Permission::pluck('id')->toArray();
+                $role->permissions()->sync($allPermissions);
+            } 
+            elseif ($request->has('permissions')) {
                 $role->permissions()->sync($request->permissions);
             }
     
@@ -79,29 +84,38 @@ class AdminRoleController extends Controller
     }
 
     // supdate role:
-    public function update(Request $request, $id)
+    public function update(AddRoleRequest $request, $id)
     {
+
+        // dd($request->all());
         try {
             $role = Role::findOrFail($id);
 
-            $request->validate([
-                'name' => 'required|string|max:255|unique:roles,name,' . $id,
-                'permissions' => 'nullable|array',
-                'permissions.*' => 'exists:permissions,id'
-            ]);
+            // validate using AddRolerequest class
 
             $role->update([
                 'name' => $request->name,
-                'slug' => strtolower(str_replace(' ', '-', $request->name))
+                'slug' => strtolower(str_replace(' ', '-', $request->name)),
+                'is_super_admin' => $request->has('is_super_admin') ? 'yes' : 'no',
             ]);
 
-            if ($request->has('permissions')) {
+            // check for super admin and attach permissions accordingly
+            if ($role->is_super_admin === 'yes') {
+               
+                // pluck used to get specific id column 
+                $allPermissions = Permission::pluck('id')->toArray();
+                // adding the permissions to the selected role using sync method.
+                $role->permissions()->sync($allPermissions);
+            } 
+            elseif ($request->has('permissions')) {
                 $role->permissions()->sync($request->permissions);
-            } else {
+            } 
+            else {
                 $role->permissions()->detach();
             }
-
             return redirect()->route('admin.roles.index')->with('success', 'Role updated successfully.');
+
+
         } catch (\Exception $e) {
             Log::error('Error updating role: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Something went wrong while updating the role.');

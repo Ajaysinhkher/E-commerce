@@ -11,9 +11,6 @@ use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminCustomerController;
 use App\Http\Controllers\CartController;
-
-
-
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminPageController;
 use App\Http\Controllers\Admin\StaticpageController;
@@ -62,19 +59,19 @@ Route::middleware("auth:admin")->group(function () {
 
         // categories management routes:
         Route::get('/', [AdminCategoryController::class,'index'])->name("admin.categories")->can('manage_categories'); //convert it to index path
-        Route::get('/create',[AdminCategoryController::class,'create'])->name('admin.categories.create');
-        Route::post('/store',[AdminCategoryController::class,'store'])->name('admin.categories.store');
+        Route::get('/create',[AdminCategoryController::class,'create'])->name('admin.categories.create')->can('manage_categories');
+        Route::post('/store',[AdminCategoryController::class,'store'])->name('admin.categories.store')->can('manage_categories');
     
         // edit category:
-        Route::get('/edit/{id}',[AdminCategoryController::class,'edit'])->name('admin.categories.edit');
-        Route::put('/update/{id}',[AdminCategoryController::class,'update'])->name('admin.categories.update');
+        Route::get('/edit/{id}',[AdminCategoryController::class,'edit'])->name('admin.categories.edit')->can('manage_categories');
+        Route::put('/update/{id}',[AdminCategoryController::class,'update'])->name('admin.categories.update')->can('manage_categories');
         // delete category:
-        Route::delete('/{id}',[AdminCategoryController::class,'destroy'])->name('admin.categories.delete');
+        Route::delete('/{id}',[AdminCategoryController::class,'destroy'])->name('admin.categories.delete')->can('manage_categories');
 
         // soft delete routes
-        Route::get('/deleted', [AdminCategoryController::class, 'deletedCategories'])->name('admin.categories.deleted');
-        Route::patch('/restore/{id}', [AdminCategoryController::class, 'restore']) ->name('admin.categories.restore');
-        Route::delete('/force-delete/{id}', [AdminCategoryController::class, 'forceDelete'])->name('admin.categories.forceDelete');
+        Route::get('/deleted', [AdminCategoryController::class, 'deletedCategories'])->name('admin.categories.deleted')->can('manage_categories');
+        Route::patch('/restore/{id}', [AdminCategoryController::class, 'restore']) ->name('admin.categories.restore')->can('manage_categories');
+        Route::delete('/force-delete/{id}', [AdminCategoryController::class, 'forceDelete'])->name('admin.categories.forceDelete')->can('manage_categories');
     });
 
   
@@ -84,56 +81,56 @@ Route::middleware("auth:admin")->group(function () {
         // manage customers at admin side:
         Route::get("/", [AdminCustomerController::class, 'index'])->name('admin.customers')->can('manage_customers');
         // edit customer:
-        Route::get('/edit/{id}',[AdminCustomerController::class,'edit'])->name('admin.customers.edit');
-        Route::put('/update/{id}',[AdminCustomerController::class,'update'])->name('admin.customers.update');
+        Route::get('/edit/{id}',[AdminCustomerController::class,'edit'])->name('admin.customers.edit')->can('manage_customers');
+        Route::put('/update/{id}',[AdminCustomerController::class,'update'])->name('admin.customers.update')->can('manage_customers');
         // delete user/customer:
-        Route::delete('/{id}',[AdminCustomerController::class,'destroy'])->name('admin.customers.delete');
+        Route::delete('/{id}',[AdminCustomerController::class,'destroy'])->name('admin.customers.delete')->can('manage_customers');
     });
 
 
-Route::prefix('orders')->group(function () {
+    Route::prefix('orders')->group(function () {
 
-    Route::get("/",[AdminOrderController::class,'index'])->name("admin.orders.index")->can('manage_orders');
-    Route::get("/{id}",[AdminOrderController::class,'show'])->name("admin.orders.show");
-    Route::put("/update/{id}",[AdminOrderController::class,'update'])->name("admin.order.update");
-});
+        Route::get("/",[AdminOrderController::class,'index'])->name("admin.orders.index")->can('manage_orders');
+        Route::get("/{id}",[AdminOrderController::class,'show'])->name("admin.orders.show");
+        Route::put("/update/{id}",[AdminOrderController::class,'update'])->name("admin.order.update");
+    });
   
     // static block(pages) routes:
 
     Route::prefix('pages')->group(function () {
 
         Route::get('/', [AdminPageController::class, 'index'])->name('admin.pages.index')->can('manage_staticblocks');
-        Route::get('/create', [AdminPageController::class, 'create'])->name('admin.pages.create');
-        Route::post('/store',[AdminPageController::class, 'store'])->name('admin.pages.store');
-        Route::get('/edit/{id}',[AdminPageController::class,'edit'])->name('admin.pages.edit');
-        Route::put('/update/{id}',[AdminPageController::class,'update'])->name('admin.pages.update');
-        Route::delete('/{id}',[AdminPageController::class,'destroy'])->name('admin.pages.destroy');
+        Route::get('/create', [AdminPageController::class, 'create'])->name('admin.pages.create')->can('manage_staticblocks');
+        Route::post('/store',[AdminPageController::class, 'store'])->name('admin.pages.store')->can('manage_staticblocks');
+        Route::get('/edit/{id}',[AdminPageController::class,'edit'])->name('admin.pages.edit')->can('manage_staticblocks');
+        Route::put('/update/{id}',[AdminPageController::class,'update'])->name('admin.pages.update')->can('manage_staticblocks');
+        Route::delete('/{id}',[AdminPageController::class,'destroy'])->name('admin.pages.destroy')->can('manage_staticblocks');
     });
 
     Route::prefix('staticPages')->group(function () {
 
-        Route::get('/', [StaticpageController::class, 'index'])->name('admin.staticpages.index');
-        Route::get('/create', [StaticpageController::class, 'create'])->name('admin.staticpages.create');
-        Route::post('/store',[StaticpageController::class, 'store'])->name('admin.staticpages.store');
-        Route::get('/edit/{id}',[StaticpageController::class,'edit'])->name('admin.staticpages.edit');
-        Route::put('/update/{id}',[StaticpageController::class,'update'])->name('admin.staticpages.update');
-        Route::delete('/{id}',[StaticpageController::class,'destroy'])->name('admin.staticpages.destroy');
+        Route::get('/', [StaticpageController::class, 'index'])->name('admin.staticpages.index')->can('manage_staticpages');
+        Route::get('/create', [StaticpageController::class, 'create'])->name('admin.staticpages.create')->can('manage_staticpages');
+        Route::post('/store',[StaticpageController::class, 'store'])->name('admin.staticpages.store')->can('manage_staticpages');
+        Route::get('/edit/{id}',[StaticpageController::class,'edit'])->name('admin.staticpages.edit')->can('manage_staticpages');
+        Route::put('/update/{id}',[StaticpageController::class,'update'])->name('admin.staticpages.update')->can('manage_staticpages');
+        Route::delete('/{id}',[StaticpageController::class,'destroy'])->name('admin.staticpages.destroy')->can('manage_staticpages');
     });
 
-    Route::get('/role',[AdminRoleController::class,'index'])->name('admin.roles.index');
-    Route::get('/role/create',[AdminRoleController::class,'create'])->name('admin.roles.create');
-    Route::post('/role/store',[AdminRoleController::class,'store'])->name('admin.roles.store');
-    Route::get('/role/edit/{id}',[AdminRoleController::class,'edit'])->name('admin.roles.edit');
-    Route::put('/role/update/{id}',[AdminRoleController::class,'update'])->name('admin.roles.update');
-    Route::delete('/role/{id}',[AdminRoleController::class,'destroy'])->name('admin.roles.destroy');
+    Route::get('/role',[AdminRoleController::class,'index'])->name('admin.roles.index')->can('manage_roles');
+    Route::get('/role/create',[AdminRoleController::class,'create'])->name('admin.roles.create')->can('manage_roles');
+    Route::post('/role/store',[AdminRoleController::class,'store'])->name('admin.roles.store')->can('manage_roles');
+    Route::get('/role/edit/{id}',[AdminRoleController::class,'edit'])->name('admin.roles.edit')->can('manage_roles');
+    Route::put('/role/update/{id}',[AdminRoleController::class,'update'])->name('admin.roles.update')->can('manage_roles');
+    Route::delete('/role/{id}',[AdminRoleController::class,'destroy'])->name('admin.roles.destroy')->can('manage_roles');
 
     Route::prefix('admin')->name('admin.')->group(function () {
-        Route::get('/admins', [AddnewAdminController::class, 'index'])->name('admins.index');
-        Route::get('/admins/create', [AddnewAdminController::class, 'create'])->name('admins.create');
-        Route::post('/admins', [AddnewAdminController::class, 'store'])->name('admins.store');
-        Route::get('/admins/edit/{id}', [AddnewAdminController::class, 'edit'])->name('admins.edit');
-        Route::put('/admins/update/{id}', [AddnewAdminController::class, 'update'])->name('admins.update');
-        Route::delete('/admins/{admin}', [AddnewAdminController::class, 'destroy'])->name('admins.destroy');
+        Route::get('/admins', [AddnewAdminController::class, 'index'])->name('admins.index')->can('manage_admins');
+        Route::get('/admins/create', [AddnewAdminController::class, 'create'])->name('admins.create')->can('manage_admins');
+        Route::post('/admins', [AddnewAdminController::class, 'store'])->name('admins.store')->can('manage_admins');
+        Route::get('/admins/edit/{id}', [AddnewAdminController::class, 'edit'])->name('admins.edit')->can('manage_admins');
+        Route::put('/admins/update/{id}', [AddnewAdminController::class, 'update'])->name('admins.update')->can('manage_admins');
+        Route::delete('/admins/{admin}', [AddnewAdminController::class, 'destroy'])->name('admins.destroy')->can('manage_admins');
     });
     
 

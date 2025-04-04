@@ -40,8 +40,8 @@ class Admin extends Authenticatable
 
     // super admin function
     public function isSuperAdmin() {
-        // Assuming Super Admin has role_id = 1
-        return $this->role_id === 6;
+        // checking if teh user is superadmin:
+        return $this->role && $this->role->is_superadmin === 'yes';
     }
 
 

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\admin;
-
+use App\Http\Requests\AddNewAdminRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -13,10 +13,8 @@ use Illuminate\Support\Facades\Log;
 class AddnewAdminController extends Controller
 {
     public function index()
-
     {
        
-
         try {
             $admins = Admin::with('role')->get(); // Eager load role
             // dd($admins);
@@ -34,23 +32,17 @@ class AddnewAdminController extends Controller
         try {
             $roles = Role::all(); // Fetch all roles
             return view('admin.admins.create', compact('roles'));
+
         } catch (\Exception $e) {
             Log::error('Error fetching roles: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Something went wrong while fetching roles.');
         }
     }
 
-    public function store(Request $request)
+    public function store(AddNewAdminRequest $request)
     {
         try {
-            // Validate the request
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|email|unique:admins,email', // Correct table name
-                'password' => 'required|min:6|confirmed',
-                'role_id' => 'required|exists:roles,id'
-            ]);
-    
+        
             // Create new admin user
             $admin = Admin::create([
                 'name' => $request->name,
@@ -58,8 +50,9 @@ class AddnewAdminController extends Controller
                 'password' => Hash::make($request->password),
                 'role_id' => $request->role_id // Directly assigning role_id
             ]);
-    
             return redirect()->route('admin.admins.index')->with('success', 'Admin created successfully.');
+
+
         } catch (\Exception $e) {
             Log::error('Error creating admin: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Something went wrong while creating the admin.');
@@ -80,17 +73,11 @@ class AddnewAdminController extends Controller
     }
 
     // update admin:
-    public function update(Request $request, $id)
+    public function update(AddNewAdminRequest $request, $id)
     {
+        // dd($request->all());
         try {
-            // Validate input
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|email|unique:admins,email,' . $id,
-                'role_id' => 'required|exists:roles,id',
-                'password' => 'nullable|min:6|confirmed'
-            ]);
-
+           
             $admin = Admin::findOrFail($id);
 
             // Update fields
@@ -99,10 +86,10 @@ class AddnewAdminController extends Controller
             $admin->role_id = $request->role_id;
 
             if ($request->filled('password')) {
-                $admin->password = Hash::make($request->password);
+                $admin->password = Hash::make($request->password);  //uses bcrypt tfor pwd encryption
             }
 
-            $admin->save();
+            $admin->save(); //saves the updated data
 
             return redirect()->route('admin.admins.index')->with('success', 'Admin updated successfully.');
         } catch (\Exception $e) {

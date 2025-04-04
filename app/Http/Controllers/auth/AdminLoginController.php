@@ -23,8 +23,10 @@ class AdminLoginController extends Controller
                 'password' => 'required|min:6',
             ]);
 
+          
             if (Auth::guard('admin')->attempt($credentials)) {
                 $request->session()->regenerate();
+
                 return redirect()->route('admin.dashboard'); // Redirect to admin dashboard
             }
 

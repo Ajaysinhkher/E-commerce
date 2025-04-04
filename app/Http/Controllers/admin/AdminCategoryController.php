@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
+use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\CategoryRequest;
@@ -14,6 +14,13 @@ class AdminCategoryController extends Controller
     // Display listing of categories:
     public function index()
     {
+
+        // if (Gate::allows('manage_categories')) {
+        //     dd('Permission granted!');
+        // } else {
+        //     dd('Permission denied!');
+        // }
+        
         try {
             $categories = Category::all();
             return view('admin.categories', ['categories' => $categories]);

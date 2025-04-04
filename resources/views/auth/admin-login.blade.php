@@ -23,6 +23,15 @@
             </div>
 
             <form class="mt-6 space-y-4" action="{{ route('admin.authenticate') }}" method="POST">
+                {{-- show validation errors if any--}}
+                @if($errors->any())
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                        <strong class="font-bold">Error!</strong>
+                        <span class="block sm:inline">{{ $errors->first() }}</span>
+                    </div>
+                @endif
+
+                
                 @csrf
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-800">Email address</label>
